@@ -46,29 +46,21 @@ public class FolderStructureFragment extends Fragment {
         outState.putString("tState", tView.getSaveState());
     }
 
+    /**
+     *  Expand folder view to the file following the path and highlight the node.
+     *
+     *  @param path an absolute path giving the location of the file
+     */
     public void highlightFile(String path) {
         tView.highlight(path);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Activity activity;
-
-        if (context instanceof Activity) {
-            activity = (Activity) context;
-            try {
-                fileSelectedListener = (OnFileSelectedListener) activity;
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString()
-                        + " must implement OnFileSelectedListener");
-            }
-        }
-
-    }
-
     public interface OnFileSelectedListener {
         void onFileSelected(String path);
+    }
+
+    public void setOnClickListener(OnFileSelectedListener onFileSelectedListener) {
+        fileSelectedListener = onFileSelectedListener;
     }
 
     private void addFileTreeView(ViewGroup containerView, String filePath) {
