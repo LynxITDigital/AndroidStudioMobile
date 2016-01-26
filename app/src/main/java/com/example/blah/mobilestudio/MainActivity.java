@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         f.setOnClickListener(this);
         f.setArguments(b);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, f).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragment, f).commit();
     }
 
     @Override
