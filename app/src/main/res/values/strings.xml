@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">MobileStudio</string>
+    <!-- Toolbar icon strings-->
+    <string name="open">Open folder</string>
+    <string name="save_all">Save all</string>
+    <string name="synchronise">Synchronise</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="cut">Cut</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
+    <string name="find">Find</string>
+    <string name="replace">Replace</string>
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
+    <string name="make_project">Make project</string>
+    <string name="select_run_debug_configuration">Select run/debug configuration</string>
+    <string name="run">Run</string>
+    <string name="debug">Debug</string>
+    <string name="run_with_coverage">Run with coverage</string>
+    <string name="attach_debugger">Attach debugger to Android Process</string>
+    <string name="preferences">Preferences</string>
+    <string name="project_structure">Project structure</string>
+    <string name="gradle_sync">Sync project with gradle files</string>
+    <string name="avd_manager">AVD manager</string>
+    <string name="sdk_manager">SDK manager</string>
+    <string name="device_monitor">Android Device Monitor</string>
+    <string name="help">Help topics</string>
 </resources>
