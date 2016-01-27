@@ -39,14 +39,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up the explorer fragment
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        FolderStructureFragment f = new FolderStructureFragment();
-        Bundle b = new Bundle();
-        b.putString(FolderStructureFragment.FILE_PATH, filePath);
-        f.setOnClickListener(this);
-        f.setArguments(b);
+        FolderStructureFragment folderStructureFragment = new FolderStructureFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
+        folderStructureFragment.setOnClickListener(this);
+        folderStructureFragment.setArguments(bundle);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment, f).commit();
+        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
