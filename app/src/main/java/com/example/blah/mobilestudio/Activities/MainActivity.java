@@ -39,15 +39,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        FolderStructureFragment f = new FolderStructureFragment();
-        Bundle b = new Bundle();
-        b.putString(FolderStructureFragment.FILE_PATH, filePath);
-        f.setOnClickListener(this);
-        f.setArguments(b);
-
-        getFragmentManager().beginTransaction().replace(R.id.fragment, f).commit();
-
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -56,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         setSupportActionBar(toolbar);
 
         // Initialise the root and current folder values
-        if(rootFolder == null){
+        if (rootFolder == null) {
             rootFolder = "";
         }
 
-        if(currentFolder == null){
+        if (currentFolder == null) {
             currentFolder = "";
         }
 
@@ -74,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_folder:
                 Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
@@ -98,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     // Check if the permission is not currently granted. If not, request it
     private void handlePermissions() {
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -107,11 +98,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     }
 
     // TODO Finish this method
+
     /**
      * Called whenever the path value has changed. Notifies all fragments that need to
      * know about the change.
      */
-    public void rootFolderChanged(){
+    public void rootFolderChanged() {
 
     }
 
@@ -130,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                     // Permission denied
                     // Cannot select empty directories
                 }
-                return;
             }
 
         }
@@ -139,11 +130,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     // How the app responds after the directory chooser activity has been launched and returned.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode){
+        switch (requestCode) {
             case PICK_DIRECTORY_REQUEST:
-                if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     rootFolder = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
                     Log.d("root", rootFolder);
+                    openFile(rootFolder);
                 }
         }
     }
@@ -153,5 +145,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         getMenuInflater().inflate(R.menu.action_bar, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void openFile(String filePath) {
+        FolderStructureFragment folderStructureFragment = new FolderStructureFragment();
+        Bundle b = new Bundle();
+        b.putString(FolderStructureFragment.FILE_PATH, filePath);
+        folderStructureFragment.setOnClickListener(this);
+        folderStructureFragment.setArguments(b);
+
+        getFragmentManager().beginTransaction().replace(R.id.fragment, folderStructureFragment).commit();
     }
 }
