@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--Open folder item-->
+    <item
+        android:id="@+id/action_open_folder"
+        android:title="@string/open"
+        android:icon="@drawable/folder_icon"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_save_all"
+        android:title="@string/save_all"
+        android:icon="@drawable/save"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_synchronise_all"
+        android:title="@string/synchronise"
+        android:icon="@drawable/synchronize"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_undo"
+        android:title="@string/undo"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/undo"/>
+    <item
+        android:id="@+id/action_redo"
+        android:title="@string/redo"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/redo"/>
+
+    <item
+        android:id="@+id/action_cut"
+        android:title="@string/cut"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/cut"/>
+
+    <item
+        android:id="@+id/action_copy"
+        android:title="@string/copy"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/copy"/>
+
+    <item
+        android:id="@+id/action_paste"
+        android:title="@string/paste"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/paste"/>
+
+    <item
+        android:id="@+id/action_find"
+        android:title="@string/find"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/find"/>
+
+    <item
+        android:id="@+id/action_replace"
+        android:title="@string/replace"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/replace"/>
+
+    <item
+        android:id="@+id/action_back"
+        android:title="@string/back"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/back"/>
+
+    <item
+        android:id="@+id/action_forward"
+        android:title="@string/forward"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/forward"/>
+
+    <item
+        android:id="@+id/action_make"
+        android:title="@string/make_project"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/make"/>
+
+    <item
+        android:id="@+id/action_select_run_config"
+        android:title="@string/select_run_debug_configuration"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/select_run_configuration"
+        />
+
+    <item
+        android:id="@+id/action_run"
+        android:title="@string/run"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/run"/>
+
+    <item
+        android:id="@+id/action_debug"
+        android:title="@string/debug"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/debug"/>
+
+    <item
+        android:id="@+id/action_coverage"
+        android:title="@string/run_with_coverage"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/run_with_coverage"/>
+
+    <item
+        android:id="@+id/action_attach_debugger"
+        android:title="@string/attach_debugger"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/add_debugger"
+        />
+
+    <item
+        android:id="@+id/action_preferences"
+        android:title="@string/preferences"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/preferences"/>
+
+    <item
+        android:id="@+id/action_project_structure"
+        android:title="@string/project_structure"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/project_structure"/>
+
+    <item
+        android:id="@+id/action_sync_gradle"
+        android:title="@string/gradle_sync"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/sync_gradle"/>
+
+    <item
+        android:id="@+id/action_avd"
+        android:title="@string/avd_manager"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/avd"/>
+    <item
+        android:id="@+id/action_sdk"
+        android:title="@string/sdk_manager"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/sdk"
+        />
+
+    <item
+        android:id="@+id/action_device_monitor"
+        android:title="@string/device_monitor"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/select_run_configuration"
+        />
+
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/help"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/help"/>
+
+</menu>
