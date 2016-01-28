@@ -20,6 +20,8 @@ import com.example.blah.mobilestudio.R;
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener {
 
     // Value for the fragments to call when they need the root folder string
@@ -83,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     @Override
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
+        File file = new File(path);
+        if(!file.isDirectory()){
+            fileFragment.setDisplayedFile(file);
+        }
+
     }
 
     @Override

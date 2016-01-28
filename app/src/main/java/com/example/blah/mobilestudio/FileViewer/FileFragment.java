@@ -38,7 +38,9 @@ public class FileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         fileText = (TextView) rootView.findViewById(R.id.content_text);
-        fileContents = savedInstanceState.getString(FILE_CONTENTS);
+        if(savedInstanceState != null){
+            fileContents = savedInstanceState.getString(FILE_CONTENTS);
+        }
         displayFileText();
         return rootView;
     }
@@ -67,6 +69,7 @@ public class FileFragment extends Fragment {
 
         // Open the file and read the lines
         try{
+            Log.d("this", "does this happen");
             BufferedReader br = new BufferedReader(new FileReader(displayedFile));
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -77,6 +80,8 @@ public class FileFragment extends Fragment {
 
             br.close();
             fileContents = stringBuilder.toString();
+            Log.d("contents", fileContents);
+            fileText.setText(fileContents);
         } catch(IOException e){
             fileText.setText(ERROR_TEXT + e.getMessage());
         }
@@ -96,5 +101,6 @@ public class FileFragment extends Fragment {
         this.displayedFile = displayedFile;
         fileContents = null;
         displayFileText();
+        Log.d("this", "does this happen");
     }
 }
