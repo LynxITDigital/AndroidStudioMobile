@@ -25,6 +25,8 @@ public class FileTreeView extends AndroidTreeView {
 
         setDefaultAnimation(true);
         setDefaultViewHolder(FileNodeViewHolder.class);
+        setUse2dScroll(true);
+        setFullWidth(true);
     }
 
 
