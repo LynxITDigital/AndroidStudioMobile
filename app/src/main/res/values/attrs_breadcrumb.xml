@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BreadcrumbView">
+        <attr name="rootPath" format="string" />
+        <attr name="orientation" format="string" />
+        <attr name="isPathable" format="boolean" />
+        <attr name="breadcrumbTextColor" format="color" />
+        <attr name="breadcrumbTextSize" format="integer" />
+        <attr name="breadcrumbBgColor" format="color" />
+    </declare-styleable>
+</resources>
+
+
+

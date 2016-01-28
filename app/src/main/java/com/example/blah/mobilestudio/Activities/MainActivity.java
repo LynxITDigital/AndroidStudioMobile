@@ -15,11 +15,13 @@ import android.view.MenuItem;
 
 import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
+import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
+import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener {
+public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
     // Value for the fragments to call when they need the root folder string
     public static final String ROOT_FOLDER = "root folder";
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private String rootFolder;
 
     Toolbar toolbar;
+    private BreadcrumbFragment breadFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,17 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     @Override
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
+        if(breadFragment != null)
+        {
+            breadFragment.currentPath = path;//.substring(path.indexOf("/", 1));
+            breadFragment.onResume();
+        }
+    }
+
+    @Override
+    public void onBreadItemSelected(String path) {
+        Log.d("brdcrumb item selected", path);
+        this.openFile(path);
     }
 
     @Override
@@ -136,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                     rootFolder = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
                     Log.d("root", rootFolder);
                     openFile(rootFolder);
+                    resetBreadcrumb(rootFolder);
                 }
         }
     }
@@ -143,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -156,4 +170,16 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         getFragmentManager().beginTransaction().replace(R.id.fragment, folderStructureFragment).commit();
     }
+
+    private void resetBreadcrumb(String filePath) {
+        //Horizontal Breadcrumb reset
+        breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
+//        if(filePath.length()>0)
+//            breadFragment.currentPath = filePath.substring(filePath.indexOf("/", 1));
+        breadFragment.currentPath = filePath;
+        breadFragment.setOnClickListener(this);
+        getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
+
+    }
+
 }
