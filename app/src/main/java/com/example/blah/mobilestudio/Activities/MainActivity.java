@@ -1,6 +1,7 @@
 package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     @Override
     public void onBreadItemSelected(String path) {
         Log.d("brdcrumb item selected", path);
-        this.openFile(path);
+        this.highlightFIle(path);
     }
 
     @Override
@@ -169,6 +170,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setArguments(b);
 
         getFragmentManager().beginTransaction().replace(R.id.fragment, folderStructureFragment).commit();
+    }
+
+    private void highlightFIle(String filePath) {
+        FolderStructureFragment folderFragment = (FolderStructureFragment) getFragmentManager().findFragmentById(R.id.fragment);
+        folderFragment.highlightFile(filePath);
     }
 
     private void resetBreadcrumb(String filePath) {
