@@ -6,6 +6,11 @@ import android.text.TextPaint;
 import android.view.Gravity;
 import android.widget.TextView;
 
+
+/*
+* This class implements the bahaviour for rotating the TextViews and print
+* the text in different orientations*
+* */
 public class VerticalTextView extends TextView {
     final boolean topDown;
 
@@ -41,9 +46,7 @@ public class VerticalTextView extends TextView {
             canvas.rotate(-90);
         }
 
-
         canvas.translate(getCompoundPaddingLeft(), getExtendedPaddingTop());
-
         getLayout().draw(canvas);
         canvas.restore();
     }

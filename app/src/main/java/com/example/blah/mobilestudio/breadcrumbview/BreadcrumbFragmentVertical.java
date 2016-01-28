@@ -26,9 +26,9 @@ public class BreadcrumbFragmentVertical extends Fragment {
         //TODO: Setup the vertical tab selector items
         ArrayList<String> li1 = new ArrayList<>();
         BreadcrumbView breadCrumb =  (BreadcrumbView)v.findViewById(R.id.bread_bar_vertical);
-        li1.add("xxx");
-        li1.add("yyyy");
-        li1.add("zzzzz");
+        li1.add("Project");
+        li1.add("Structure");
+        li1.add("Captures");
         breadCrumb.SetElements(li1);
 
         return  v;
