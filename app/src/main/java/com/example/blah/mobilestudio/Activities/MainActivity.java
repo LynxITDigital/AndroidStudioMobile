@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 
@@ -32,7 +33,10 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private String currentFolder;
     private String rootFolder;
 
+    // The various UI elements available
     Toolbar toolbar;
+    FolderStructureFragment folderStructureFragment;
+    FileFragment fileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the explorer fragment
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        FolderStructureFragment folderStructureFragment = new FolderStructureFragment();
+        folderStructureFragment = new FolderStructureFragment();
         Bundle bundle = new Bundle();
         bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
         folderStructureFragment.setOnClickListener(this);
@@ -55,6 +59,13 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
+
+        // Set up the file fragment
+        fileFragment = new FileFragment();
+        //fileFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction()
+                            .add(R.id.content_fragment, fileFragment)
+                            .commit();
 
         // Initialise the root and current folder values
         if(rootFolder == null){
