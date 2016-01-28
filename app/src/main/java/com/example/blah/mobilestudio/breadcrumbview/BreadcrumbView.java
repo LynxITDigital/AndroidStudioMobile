@@ -67,15 +67,17 @@ public class BreadcrumbView extends LinearLayout {
         mListener  = onItemSelectedListener;
         final ArrayList<String> elements = this.listOfElements;
 
+        // Itereates on the child nodes of breadcrumb
         for(int i = 0; i<this.getChildCount();i++){
             View v = this.getChildAt(i);
             if(v != null && v.getTag() != null && v.getTag().toString().startsWith("brItem")) {
+                // Set a onClick listener for each view element in the breadcrumb
                 v.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String relativePathToCurrentCell = "";
                         if (isPathable) {
-
+                            // Generate a relative path string from root up to the selected element
                             for (int i = 0; i < elements.size(); i++) {
                                 relativePathToCurrentCell += elements.get(i) + "/";
                                 if (elements.get(i).equals(((TextView) v).getText().toString().trim()))
@@ -89,12 +91,11 @@ public class BreadcrumbView extends LinearLayout {
                         if (mListener != null)
                             mListener.onBreadItemSelected(currentPath);
 
+                        //TODO: needs to clear up some operations
                         Log.d("Selected Item is: ", currentPath);
                     }
                 });
-
             }
-
         }
     }
 
@@ -107,6 +108,7 @@ public class BreadcrumbView extends LinearLayout {
      */
     public void SetElements(final ArrayList<String> elements)
     {
+        //TODO: needs to be a bit more optimized
         this.listOfElements = elements;
 
         final LinearLayout breadRoot = this;// findViewById(R.id.bread_bar);

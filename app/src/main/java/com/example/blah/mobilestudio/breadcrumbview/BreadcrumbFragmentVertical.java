@@ -23,7 +23,7 @@ public class BreadcrumbFragmentVertical extends Fragment {
 
         View v =  inflater.inflate(R.layout.breadcrumb_fragment_vertical, container, false);
 
-
+        //TODO: Setup the vertical tab selector items
         ArrayList<String> li1 = new ArrayList<>();
         BreadcrumbView breadCrumb =  (BreadcrumbView)v.findViewById(R.id.bread_bar_vertical);
         li1.add("xxx");
