@@ -108,10 +108,8 @@ public class BreadcrumbView extends LinearLayout {
      */
     public void SetElements(final ArrayList<String> elements)
     {
-        //TODO: needs to be a bit more optimized
         this.listOfElements = elements;
-
-        final LinearLayout breadRoot = this;// findViewById(R.id.bread_bar);
+        final LinearLayout breadRoot = this;
         breadRoot.removeAllViews();
 
         if(orientation.equals("horizontal")) {
@@ -137,12 +135,6 @@ public class BreadcrumbView extends LinearLayout {
 
             }
             tv.setTag("brItem" + String.valueOf(i));
-
-            tv.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {}
-            });
-
             breadRoot.addView(tv);
 
             if(i != this.listOfElements.size() - 1)

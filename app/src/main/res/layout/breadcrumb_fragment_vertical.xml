@@ -8,7 +8,7 @@
         android:id="@+id/bread_bar_vertical"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:background="#4f9438"
+        android:background="#414141"
         custom:orientation="vertical"
         custom:isPathable="false"
         custom:breadcrumbBgColor="#019117"

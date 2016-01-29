@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+//            breadFragment = getFragmentManager().findFragmentById(R.id.topBreadFragment);
+
+//            getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         Log.d("file-selected", path);
         if(breadFragment != null)
         {
-            breadFragment.currentPath = path;//.substring(path.indexOf("/", 1));
+            breadFragment.currentPath = path;
             breadFragment.onResume();
         }
     }
@@ -174,8 +180,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private void resetBreadcrumb(String filePath) {
         //Horizontal Breadcrumb reset
         breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
-//        if(filePath.length()>0)
-//            breadFragment.currentPath = filePath.substring(filePath.indexOf("/", 1));
         breadFragment.currentPath = filePath;
         breadFragment.setOnClickListener(this);
         getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
