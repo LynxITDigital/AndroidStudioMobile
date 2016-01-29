@@ -96,8 +96,9 @@ public class FileFragment extends Fragment {
                 String line = null;
 
                 while ((line = br.readLine()) != null){
-                    stringBuilder.append(line + System.getProperty("line.separator"));
-                    publishProgress(new String(line) + System.getProperty("line.separator"));
+                    line = line + System.getProperty("line.separator");
+                    stringBuilder.append(line);
+                    publishProgress(new String(line));
                 }
 
                 br.close();
