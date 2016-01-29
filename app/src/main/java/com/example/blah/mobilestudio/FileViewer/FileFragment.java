@@ -1,12 +1,14 @@
 package com.example.blah.mobilestudio.FileViewer;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.blah.mobilestudio.R;
@@ -15,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * Created by Stephen on 27/01/2016.
@@ -66,24 +69,57 @@ public class FileFragment extends Fragment {
             fileText.setText(fileContents);
             return;
         }
+        new FileOpenerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-        // Open the file and read the lines
-        try{
-            Log.d("this", "does this happen");
-            BufferedReader br = new BufferedReader(new FileReader(displayedFile));
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
+    class FileOpenerTask extends AsyncTask<Void, String, Void> {
+        long startTime;
+        long endTime;
 
-            while ((line = br.readLine()) != null){
-                stringBuilder.append(line);
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+
+            startTime = Calendar.getInstance().getTimeInMillis();
+            fileText.setText("");
+        }
+
+        @Override
+        protected Void doInBackground(Void[] params) {
+
+
+            // Open the file and read each lines
+            try{
+                Log.d("this", "does this happen");
+                BufferedReader br = new BufferedReader(new FileReader(displayedFile));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = null;
+
+                while ((line = br.readLine()) != null){
+                    stringBuilder.append(line + System.getProperty("line.separator"));
+                    publishProgress(new String(line) + System.getProperty("line.separator"));
+                }
+
+                br.close();
+                fileContents = stringBuilder.toString();
+                Log.d("contents", fileContents);
+
+            } catch(IOException e){
+                Log.d("error",e.getMessage());
             }
+            return null;
+        }
 
-            br.close();
-            fileContents = stringBuilder.toString();
-            Log.d("contents", fileContents);
-            fileText.setText(fileContents);
-        } catch(IOException e){
-            fileText.setText(ERROR_TEXT + e.getMessage());
+        @Override
+        protected void onProgressUpdate(String... progress){
+            fileText.append(progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+
+            endTime = Calendar.getInstance().getTimeInMillis();
+            Log.d("time taken", String.valueOf(endTime - startTime));
         }
 
     }
