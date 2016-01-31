@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import com.example.blah.mobilestudio.R;
 
@@ -84,15 +86,10 @@ public class BreadcrumbView extends LinearLayout {
                                     break;
                             }
                             currentPath = rootPath + "/" + relativePathToCurrentCell;
-                        } else {
-                            currentPath = ((TextView) v).getText().toString().trim();
                         }
 
                         if (mListener != null)
                             mListener.onBreadItemSelected(currentPath);
-
-                        //TODO: needs to clear up some operations
-                        Log.d("Selected Item is: ", currentPath);
                     }
                 });
             }
@@ -132,6 +129,14 @@ public class BreadcrumbView extends LinearLayout {
                 ((VerticalTextView)tv).setTextColor(breadcrumbTextColor);
                 ((VerticalTextView)tv).setTextSize(breadcrumbTextSize);
                 ((VerticalTextView)tv).setText(" " + this.listOfElements.get(i) + " ");
+                // Set the listener for vertical items
+                tv.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String selectedText = ((TextView) v).getText().toString().trim();
+                        Toast.makeText(getContext(), selectedText, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
             tv.setTag("brItem" + String.valueOf(i));

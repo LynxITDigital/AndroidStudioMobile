@@ -40,12 +40,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState != null){
-//            breadFragment = getFragmentManager().findFragmentById(R.id.topBreadFragment);
-
-//            getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

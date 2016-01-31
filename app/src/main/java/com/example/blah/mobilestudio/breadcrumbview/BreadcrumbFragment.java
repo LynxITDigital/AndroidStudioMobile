@@ -57,7 +57,6 @@ public class BreadcrumbFragment extends Fragment {
 
     public void setOnClickListener(OnItemSelectedListener onItemSelectedListener) {
         mListener  = onItemSelectedListener;
-
         breadCrumb.setOnClickListener(onItemSelectedListener);
     }
 
