@@ -135,9 +135,9 @@ public class FileFragment extends Fragment {
      *                      opened in the FileFragment.
      */
     public void setDisplayedFile(File displayedFile) {
-        this.displayedFile = displayedFile;
+
         fileContents = null;
         displayFileText();
-        Log.d("this", "does this happen");
+        this.displayedFile = displayedFile;
     }
 }
