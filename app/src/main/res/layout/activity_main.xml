@@ -50,9 +50,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/topBreadFragment"
         android:layout_toEndOf="@id/explorer_fragment"
-        android:layout_toRightOf="@id/explorer_fragment" />
-
-    </RelativeLayout>
+        android:layout_toRightOf="@id/explorer_fragment" />    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
