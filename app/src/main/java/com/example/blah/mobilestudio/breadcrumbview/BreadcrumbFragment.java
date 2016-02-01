@@ -2,6 +2,8 @@ package com.example.blah.mobilestudio.breadcrumbview;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,7 +57,6 @@ public class BreadcrumbFragment extends Fragment {
 
     public void setOnClickListener(OnItemSelectedListener onItemSelectedListener) {
         mListener  = onItemSelectedListener;
-
         breadCrumb.setOnClickListener(onItemSelectedListener);
     }
 
@@ -83,6 +84,4 @@ public class BreadcrumbFragment extends Fragment {
             throw new ClassCastException(context.toString() + "Z must implement OnItemSelected");
         }
     }
-
-
 }

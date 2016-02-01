@@ -1,6 +1,7 @@
 package com.example.blah.mobilestudio.breadcrumbview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import com.example.blah.mobilestudio.R;
 
 /**
@@ -16,6 +18,7 @@ import com.example.blah.mobilestudio.R;
 public class BreadcrumbFragmentVertical extends Fragment {
 
     OnItemSelectedListener mListener;
+    BreadcrumbView breadCrumb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,20 +26,20 @@ public class BreadcrumbFragmentVertical extends Fragment {
 
         View v =  inflater.inflate(R.layout.breadcrumb_fragment_vertical, container, false);
 
-        //TODO: Setup the vertical tab selector items
-        ArrayList<String> li1 = new ArrayList<>();
-        BreadcrumbView breadCrumb =  (BreadcrumbView)v.findViewById(R.id.bread_bar_vertical);
-        li1.add("Project");
-        li1.add("Structure");
-        li1.add("Captures");
-        breadCrumb.SetElements(li1);
+        ArrayList<String> verticalMenuItems = new ArrayList<>();
+        breadCrumb =  (BreadcrumbView)v.findViewById(R.id.bread_bar_vertical);
 
+        // Set items in the Vertical menu
+        verticalMenuItems.add("Project");
+        verticalMenuItems.add("Structure");
+        verticalMenuItems.add("Captures");
+        breadCrumb.SetElements(verticalMenuItems);
         return  v;
-
     }
 
     @Override
     public void onAttach(Activity activity) {
+        // CHECK IF IT"S UNDER 23
         super.onAttach(activity);
         try {
             mListener = (OnItemSelectedListener) activity;
@@ -45,5 +48,17 @@ public class BreadcrumbFragmentVertical extends Fragment {
         }
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        // CHECK IF IT"S MOre THAN 23
+
+        super.onAttach(context);
+        try {
+            mListener = (OnItemSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "Z must implement OnItemSelected");
+        }
+    }
 
 }

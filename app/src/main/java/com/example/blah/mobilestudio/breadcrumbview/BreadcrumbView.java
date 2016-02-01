@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import com.example.blah.mobilestudio.R;
 
@@ -20,31 +22,24 @@ public class BreadcrumbView extends LinearLayout {
     private ArrayList<String> listOfElements;
 
     Paint paintColorStyle;
-    String rootPath = "";
     String currentPath = "";
-
     String orientation = "";
     Boolean isPathable = true;
     Integer breadcrumbTextColor;
     Integer breadcrumbTextSize;
     Integer breadcrumbBgColor;
-
-    Integer vertLen = 0;
     private static int SPACER_WIDTH = 3;
     OnItemSelectedListener mListener;
 
     public BreadcrumbView (Context context, AttributeSet attrs){
         super(context, attrs);
 
-
         this.listOfElements= new ArrayList<String>();
         paintColorStyle = new Paint();
         TypedArray attributesValuesArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BreadcrumbView, 0, 0);
 
         try {
-            rootPath = "";
             currentPath ="";
-
             isPathable = attributesValuesArray.getBoolean(R.styleable.BreadcrumbView_isPathable, true);
             orientation = attributesValuesArray.getString(R.styleable.BreadcrumbView_orientation);
             breadcrumbTextColor = attributesValuesArray.getInteger(R.styleable.BreadcrumbView_breadcrumbTextColor, 0);
@@ -54,14 +49,7 @@ public class BreadcrumbView extends LinearLayout {
         finally {
             attributesValuesArray.recycle();
         }
-
     }
-
-    @Override
-    protected void onDraw(Canvas canvas){
-
-    }
-
 
     public void setOnClickListener(OnItemSelectedListener onItemSelectedListener) {
         mListener  = onItemSelectedListener;
@@ -83,16 +71,11 @@ public class BreadcrumbView extends LinearLayout {
                                 if (elements.get(i).equals(((TextView) v).getText().toString().trim()))
                                     break;
                             }
-                            currentPath = rootPath + "/" + relativePathToCurrentCell;
-                        } else {
-                            currentPath = ((TextView) v).getText().toString().trim();
+                            currentPath = "/" + relativePathToCurrentCell;
                         }
 
                         if (mListener != null)
                             mListener.onBreadItemSelected(currentPath);
-
-                        //TODO: needs to clear up some operations
-                        Log.d("Selected Item is: ", currentPath);
                     }
                 });
             }
@@ -108,10 +91,8 @@ public class BreadcrumbView extends LinearLayout {
      */
     public void SetElements(final ArrayList<String> elements)
     {
-        //TODO: needs to be a bit more optimized
         this.listOfElements = elements;
-
-        final LinearLayout breadRoot = this;// findViewById(R.id.bread_bar);
+        final LinearLayout breadRoot = this;
         breadRoot.removeAllViews();
 
         if(orientation.equals("horizontal")) {
@@ -134,15 +115,17 @@ public class BreadcrumbView extends LinearLayout {
                 ((VerticalTextView)tv).setTextColor(breadcrumbTextColor);
                 ((VerticalTextView)tv).setTextSize(breadcrumbTextSize);
                 ((VerticalTextView)tv).setText(" " + this.listOfElements.get(i) + " ");
+                // Set the listener for vertical items
+                tv.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String selectedText = ((TextView) v).getText().toString().trim();
+                        Toast.makeText(getContext(), selectedText, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
             tv.setTag("brItem" + String.valueOf(i));
-
-            tv.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {}
-            });
-
             breadRoot.addView(tv);
 
             if(i != this.listOfElements.size() - 1)
