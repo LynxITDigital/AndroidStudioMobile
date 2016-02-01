@@ -198,11 +198,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setOnClickListener(this);
         folderStructureFragment.setArguments(b);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment, folderStructureFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
     }
 
     private void highlightFIle(String filePath) {
-        FolderStructureFragment folderFragment = (FolderStructureFragment) getFragmentManager().findFragmentById(R.id.fragment);
+        FolderStructureFragment folderFragment = (FolderStructureFragment) getFragmentManager().findFragmentById(R.id.explorer_fragment);
         folderFragment.highlightFile(filePath);
     }
 
