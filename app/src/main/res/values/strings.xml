@@ -28,8 +28,8 @@
     <string name="help">Help topics</string>
 
     <!-- Android monitor tab headings -->
-    <string name="logcat">logcat</string>
-    <string name="memory">memory</string>
+    <string name="logcat">Logcat</string>
+    <string name="memory">Memory</string>
     <string name="cpu">CPU</string>
     <string name="gpu">GPU</string>
     <string name="network">Network</string>

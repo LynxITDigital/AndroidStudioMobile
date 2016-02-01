@@ -18,6 +18,7 @@ public class AndroidMonitorPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
 
+    //tab element numbers. For future use in the getItem() function.
     public static final int LOGCAT_POSITION = 0;
     public static final int MEMORY_POSITION = 1;
     public static final int CPU_POSITION = 2;
@@ -51,30 +52,6 @@ public class AndroidMonitorPagerAdapter extends FragmentPagerAdapter {
         arguments.putString(TextTabFragment.BUNDLE_TEXT, "");
 
         fragment.setArguments(arguments);
-
-        // Not differentiating construction of tabs at the moment.
-//        switch (position) {
-//            case LOGCAT_POSITION: {
-//
-//                break;
-//            }
-//            case MEMORY_POSITION: {
-//
-//                break;
-//            }
-//            case CPU_POSITION: {
-//
-//                break;
-//            }
-//            case GPU_POSITION: {
-//
-//                break;
-//            }
-//            case NETWORK_POSITION: {
-//
-//                break;
-//            }
-//        }
 
         return fragment;
     }
