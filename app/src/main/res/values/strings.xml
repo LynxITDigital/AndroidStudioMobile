@@ -26,4 +26,11 @@
     <string name="sdk_manager">SDK manager</string>
     <string name="device_monitor">Android Device Monitor</string>
     <string name="help">Help topics</string>
+
+    <!-- Android monitor tab headings -->
+    <string name="logcat">logcat</string>
+    <string name="memory">memory</string>
+    <string name="cpu">CPU</string>
+    <string name="gpu">GPU</string>
+    <string name="network">Network</string>
 </resources>
