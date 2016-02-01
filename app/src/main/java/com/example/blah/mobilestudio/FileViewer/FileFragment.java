@@ -32,8 +32,8 @@ public class FileFragment extends Fragment {
                                         + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     private static String FILE_CONTENTS = "File contents";
-    private static String HTML_OPENING = "<html><body>";
-    private static String HTML_CLOSING = "</html></body>";
+    private static String HTML_OPENING = "<html><body><![CDATA[";
+    private static String HTML_CLOSING = "]]></html></body>";
     WebView webView;
 
 
@@ -90,13 +90,14 @@ public class FileFragment extends Fragment {
                 String line = null;
 
                 while ((line = br.readLine()) != null){
-                    line = line + "<br \\>";
+                    line = line + "\n";
                     stringBuilder.append(line);
                 }
 
                 br.close();
-
-                return stringBuilder.toString();
+                String returnString = stringBuilder.toString();
+                // Do not allow the CData to end
+                return returnString.replaceAll("]]>", "]]]]><![CDATA[>");
             } catch(IOException e){
                 Log.d("error",e.getMessage());
             }
