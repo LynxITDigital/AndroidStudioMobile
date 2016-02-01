@@ -115,7 +115,7 @@ public class FileFragment extends Fragment {
 
                     lineNumber++;
                 }
-
+                publishProgress(nextCellData.toString());
                 br.close();
 
 
@@ -151,7 +151,8 @@ public class FileFragment extends Fragment {
      *                      opened in the FileFragment.
      */
     public void setDisplayedFile(File displayedFile) {
-
+        fileContents.clear();
+        listAdapter.notifyDataSetChanged();
         displayFileText();
         this.displayedFile = displayedFile;
     }
