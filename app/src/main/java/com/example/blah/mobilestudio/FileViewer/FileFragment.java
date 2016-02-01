@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,7 +20,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Stephen on 27/01/2016.
@@ -28,29 +33,32 @@ public class FileFragment extends Fragment {
 
     // The file to be displayed
     private File displayedFile;
-    private TextView fileText;
-    private String fileContents;
     private static String  DEFAULT_TEXT = "No files are open"  +
                                         System.getProperty("line.separator")
                                         + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     private static String FILE_CONTENTS = "File contents";
 
+    private static final int LINES_PER_CELL = 50;
+    private ListView fileList;
+    private ArrayList<String> fileContents;
+    private ArrayAdapter<String> listAdapter;
 
+    // TODO save file Contents in on save state
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
-        fileText = (TextView) rootView.findViewById(R.id.content_text);
-        if(savedInstanceState != null){
-            fileContents = savedInstanceState.getString(FILE_CONTENTS);
-        }
+        fileList = (ListView) rootView.findViewById(R.id.file_list);
+        fileContents = new ArrayList<String>();
+        listAdapter = new ArrayAdapter<String>(getContext(), R.layout.file_text_cell ,fileContents);
+        fileList.setAdapter(listAdapter);
         displayFileText();
         return rootView;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
-        outState.putString(FILE_CONTENTS, fileContents);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -60,15 +68,13 @@ public class FileFragment extends Fragment {
     private void displayFileText() {
         // If no file has been selected display the defualt text instructing the user to find a file
         if(displayedFile == null){
-            fileText.setText(DEFAULT_TEXT);
+            fileContents.add(DEFAULT_TEXT);
+            listAdapter.notifyDataSetChanged();
             return;
         }
 
         // If we already have file text, no need to reopen the file
-        if(fileContents != null){
-            fileText.setText(fileContents);
-            return;
-        }
+
         new FileOpenerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -79,9 +85,9 @@ public class FileFragment extends Fragment {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-
+            fileContents.clear();
+            listAdapter.notifyDataSetChanged();
             startTime = Calendar.getInstance().getTimeInMillis();
-            fileText.setText("");
         }
 
         @Override
@@ -90,20 +96,28 @@ public class FileFragment extends Fragment {
 
             // Open the file and read each lines
             try{
-                Log.d("this", "does this happen");
+
                 BufferedReader br = new BufferedReader(new FileReader(displayedFile));
                 StringBuilder stringBuilder = new StringBuilder();
+                StringBuilder nextCellData = new StringBuilder();
+                int lineNumber = 0;
                 String line = null;
-
+                // Load fifty lines at a time, then add them to the list
                 while ((line = br.readLine()) != null){
                     line = line + System.getProperty("line.separator");
                     stringBuilder.append(line);
-                    publishProgress(new String(line));
+                    nextCellData.append(line);
+                    // Add the lines to a new cell in the list
+                    if((lineNumber % LINES_PER_CELL) == 0){
+                        publishProgress(new String(nextCellData.toString()));
+                        nextCellData = new StringBuilder();
+                    }
+
+                    lineNumber++;
                 }
 
                 br.close();
-                fileContents = stringBuilder.toString();
-                Log.d("contents", fileContents);
+
 
             } catch(IOException e){
                 Log.d("error",e.getMessage());
@@ -113,7 +127,9 @@ public class FileFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... progress){
-            fileText.append(progress[0]);
+            fileContents.add(progress[0]);
+            listAdapter.notifyDataSetChanged();
+
         }
 
         @Override
@@ -136,7 +152,6 @@ public class FileFragment extends Fragment {
      */
     public void setDisplayedFile(File displayedFile) {
 
-        fileContents = null;
         displayFileText();
         this.displayedFile = displayedFile;
     }
