@@ -1,14 +1,13 @@
 package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +21,6 @@ import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
-
 
 import java.io.File;
 
@@ -59,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setArguments(bundle);
 
         getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+        resetBreadcrumb(filePath);
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
@@ -67,12 +66,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-        // Set up the file fragment
-        fileFragment = new FileFragment();
-        //fileFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction()
-                            .add(R.id.content_fragment, fileFragment)
-                            .commit();
 
         // Initialise the root and current folder values
         if (rootFolder == null) {
@@ -91,12 +84,27 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
         File file = new File(path);
-        if(!file.isDirectory()){
-            fileFragment.setDisplayedFile(file);
+        if (!file.isDirectory()) {
+            fileFragment = new FileFragment();
+            Bundle args = new Bundle();
+            args.putString(FileFragment.FILE_CONTENTS, path);
+            fileFragment.setArguments(args);
+
+            if (findViewById(R.id.content_fragment) != null) {
+
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_fragment, fileFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.explorer_fragment, fileFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
 
-        if(breadFragment != null)
-        {
+        if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
         }
