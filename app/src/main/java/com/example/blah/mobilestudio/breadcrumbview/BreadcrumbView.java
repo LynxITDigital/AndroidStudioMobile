@@ -22,31 +22,24 @@ public class BreadcrumbView extends LinearLayout {
     private ArrayList<String> listOfElements;
 
     Paint paintColorStyle;
-    String rootPath = "";
     String currentPath = "";
-
     String orientation = "";
     Boolean isPathable = true;
     Integer breadcrumbTextColor;
     Integer breadcrumbTextSize;
     Integer breadcrumbBgColor;
-
-    Integer vertLen = 0;
     private static int SPACER_WIDTH = 3;
     OnItemSelectedListener mListener;
 
     public BreadcrumbView (Context context, AttributeSet attrs){
         super(context, attrs);
 
-
         this.listOfElements= new ArrayList<String>();
         paintColorStyle = new Paint();
         TypedArray attributesValuesArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BreadcrumbView, 0, 0);
 
         try {
-            rootPath = "";
             currentPath ="";
-
             isPathable = attributesValuesArray.getBoolean(R.styleable.BreadcrumbView_isPathable, true);
             orientation = attributesValuesArray.getString(R.styleable.BreadcrumbView_orientation);
             breadcrumbTextColor = attributesValuesArray.getInteger(R.styleable.BreadcrumbView_breadcrumbTextColor, 0);
@@ -56,14 +49,7 @@ public class BreadcrumbView extends LinearLayout {
         finally {
             attributesValuesArray.recycle();
         }
-
     }
-
-    @Override
-    protected void onDraw(Canvas canvas){
-
-    }
-
 
     public void setOnClickListener(OnItemSelectedListener onItemSelectedListener) {
         mListener  = onItemSelectedListener;
@@ -85,7 +71,7 @@ public class BreadcrumbView extends LinearLayout {
                                 if (elements.get(i).equals(((TextView) v).getText().toString().trim()))
                                     break;
                             }
-                            currentPath = rootPath + "/" + relativePathToCurrentCell;
+                            currentPath = "/" + relativePathToCurrentCell;
                         }
 
                         if (mListener != null)
