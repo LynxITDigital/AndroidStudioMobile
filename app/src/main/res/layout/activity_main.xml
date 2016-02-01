@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.MainActivity"
+    android:weightSum="3"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
+    android:layout_width="match_parent" >
 
-
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+<android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -43,5 +49,22 @@
         android:layout_height="match_parent"
         android:layout_below="@id/topBreadFragment"
         android:layout_toEndOf="@id/explorer_fragment"
-        android:layout_toRightOf="@id/explorer_fragment" />
-</RelativeLayout>
+        android:layout_toRightOf="@id/explorer_fragment" /> 
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/very_light_grey">
+
+        <fragment
+            android:id="@+id/android_monitor"
+            android:name="com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
+</LinearLayout>
