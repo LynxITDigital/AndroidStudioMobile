@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.blah.mobilestudio"
+    android:background="#ffc400">
+    <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="0px">
+    <com.example.blah.mobilestudio.breadcrumbview.BreadcrumbView
+        android:id="@+id/bread_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="horizontal"
+        android:background="#267ae1"
+        custom:orientation="horizontal"
+        custom:breadcrumbBgColor="#ce44d6"
+        custom:breadcrumbTextColor = "#8ae2ff"
+        custom:breadcrumbTextSize = "14"
+        custom:rootPath=""
+        />
+    </HorizontalScrollView>
+</RelativeLayout>
