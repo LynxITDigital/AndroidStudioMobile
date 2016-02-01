@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="vertical">
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        >
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/content_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/border"
-            android:padding="4dp"
-            android:text="New Text" />
-    </HorizontalScrollView>
+    android:background="@drawable/border"
+    android:fillViewport="true">
 
-</ScrollView>
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/file_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:divider="#00000000"
+        android:scrollbars="vertical">
+
+    </ListView>
+</HorizontalScrollView>
