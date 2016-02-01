@@ -3,7 +3,9 @@ package com.example.blah.mobilestudio.breadcrumbview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.provider.CalendarContract;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -71,9 +73,17 @@ public class BreadcrumbView extends LinearLayout {
                                 if (elements.get(i).equals(((TextView) v).getText().toString().trim()))
                                     break;
                             }
-                            currentPath = "/" + relativePathToCurrentCell;
-                        }
 
+                            BreadcrumbView p = (BreadcrumbView)v.getParent();
+                            for(int i = 0; i<p.getChildCount();i++) {
+                                View curV = p.getChildAt(i);
+                                if (curV != null && curV.getTag() != null && curV.getTag().toString().startsWith("brItem")) {
+                                    curV.setBackgroundColor(breadcrumbBgColor);
+                                }
+                            }
+                            currentPath = "/" + relativePathToCurrentCell;
+                            v.setBackgroundColor(Color.BLUE);
+                        }
                         if (mListener != null)
                             mListener.onBreadItemSelected(currentPath);
                     }
@@ -126,6 +136,9 @@ public class BreadcrumbView extends LinearLayout {
 
             }
             tv.setTag("brItem" + String.valueOf(i));
+            if(i == this.listOfElements.size() - 1 && isPathable){
+                tv.setBackgroundColor(Color.BLUE);
+            }
             breadRoot.addView(tv);
 
             if(i != this.listOfElements.size() - 1)
@@ -139,7 +152,6 @@ public class BreadcrumbView extends LinearLayout {
                 spacerView.setBackgroundColor(breadcrumbTextColor);
                 breadRoot.addView(spacerView);
             }
-
         }
 
     }
