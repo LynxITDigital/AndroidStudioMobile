@@ -263,5 +263,8 @@ public class TreeNode {
             // empty
         }
 
+        public void recycleView() {
+            mView = null;
+        }
     }
 }
