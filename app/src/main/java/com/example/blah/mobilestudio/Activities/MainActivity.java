@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
@@ -21,6 +22,9 @@ import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
@@ -35,7 +39,10 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private String currentFolder;
     private String rootFolder;
 
+    // The various UI elements available
     Toolbar toolbar;
+    FolderStructureFragment folderStructureFragment;
+    FileFragment fileFragment;
     private BreadcrumbFragment breadFragment;
 
     @Override
@@ -43,12 +50,29 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up the explorer fragment
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        folderStructureFragment = new FolderStructureFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
+        folderStructureFragment.setOnClickListener(this);
+        folderStructureFragment.setArguments(bundle);
+
+        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
+
+        // Set up the file fragment
+        fileFragment = new FileFragment();
+        //fileFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction()
+                            .add(R.id.content_fragment, fileFragment)
+                            .commit();
 
         // Initialise the root and current folder values
         if (rootFolder == null) {
@@ -66,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     @Override
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
+        File file = new File(path);
+        if(!file.isDirectory()){
+            fileFragment.setDisplayedFile(file);
+        }
+
         if(breadFragment != null)
         {
             breadFragment.currentPath = path;
