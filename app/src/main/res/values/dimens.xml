@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="android_monitor_title_height">40dp</dimen>
+    <dimen name="resizer_border_width">16dp</dimen>
+    <dimen name="resizer_move_size">46dp</dimen>
 </resources>
