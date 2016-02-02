@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.blah.mobilestudio"
+    android:background="#ffc400">
+    <com.example.blah.mobilestudio.breadcrumbview.BreadcrumbView
+        android:id="@+id/bread_bar_vertical"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:background="#414141"
+        custom:orientation="vertical"
+        custom:isPathable="false"
+        custom:breadcrumbBgColor="#019117"
+        custom:breadcrumbTextColor = "#f9a41c"
+        custom:breadcrumbTextSize = "14"
+        custom:rootPath=""
+        />
+</RelativeLayout>

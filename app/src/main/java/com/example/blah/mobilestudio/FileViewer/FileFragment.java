@@ -1,14 +1,15 @@
 package com.example.blah.mobilestudio.FileViewer;
 
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+
 
 import com.example.blah.mobilestudio.R;
 
@@ -39,18 +40,27 @@ public class FileFragment extends Fragment {
     WebView webView;
 
 
+
     // TODO save file Contents in on save state
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         webView = (WebView) rootView.findViewById(R.id.web_layout);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            String filePath = args.getString(FILE_CONTENTS);
+            if (filePath != null) {
+                setDisplayedFile(new File(filePath));
+            }
+        }
+
         displayFileText();
         return rootView;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
-
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
@@ -64,8 +74,6 @@ public class FileFragment extends Fragment {
             return;
         }
 
-        // If we already have file text, no need to reopen the file
-
         new FileOpenerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -74,7 +82,7 @@ public class FileFragment extends Fragment {
         long endTime;
 
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             super.onPreExecute();
 
             startTime = Calendar.getInstance().getTimeInMillis();
@@ -85,8 +93,8 @@ public class FileFragment extends Fragment {
 
 
             // Open the file and read each lines
-            try{
-
+            try {
+                Log.d("this", "does this happen");
                 BufferedReader br = new BufferedReader(new FileReader(displayedFile));
                 StringBuilder stringBuilder = new StringBuilder();
                 String line = null;
@@ -94,26 +102,22 @@ public class FileFragment extends Fragment {
                 while ((line = br.readLine()) != null){
                     line = line + System.getProperty("line.separator");
                     stringBuilder.append(line);
-                }
 
+                }
                 br.close();
                 String returnString = stringBuilder.toString();
                 // Do not allow the CData to end
                 return StringEscapeUtils.escapeHtml4(returnString).replaceAll("\n", "<br />\n");
             } catch(IOException e){
                 Log.d("error",e.getMessage());
+
             }
             return null;
         }
 
-        @Override
-        protected void onProgressUpdate(String... progress){
-
-        }
 
         @Override
         protected void onPostExecute(String result){
-
             webView.loadData(HTML_OPENING + result + HTML_CLOSING, "text/html; charset=utf-8", null);
             endTime = Calendar.getInstance().getTimeInMillis();
             Log.d("time taken", String.valueOf(endTime - startTime));
@@ -126,12 +130,10 @@ public class FileFragment extends Fragment {
     }
 
     /**
-     *
      * @param displayedFile - the file to be displayed to the user. The file will immediately be
      *                      opened in the FileFragment.
      */
     public void setDisplayedFile(File displayedFile) {
-
         displayFileText();
         this.displayedFile = displayedFile;
     }

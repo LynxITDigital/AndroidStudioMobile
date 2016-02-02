@@ -1,6 +1,7 @@
 package com.example.blah.mobilestudio.treeview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -15,6 +16,9 @@ import com.example.blah.mobilestudio.R;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by Bogdan Melnychuk on 2/10/15.
@@ -31,6 +35,7 @@ public class AndroidTreeView {
     private TreeNode.TreeNodeLongClickListener nodeLongClickListener;
     private boolean mUseDefaultAnimation = false;
     private boolean use2dScroll = false;
+    private boolean fullWidth;
 
     public AndroidTreeView(Context context) {
         mContext = context;
@@ -93,9 +98,17 @@ public class AndroidTreeView {
         final ViewGroup view;
         if (style > 0) {
             ContextThemeWrapper newContext = new ContextThemeWrapper(mContext, style);
-            view = use2dScroll ? new TwoDScrollView(newContext) : new ScrollView(newContext);
+            if (use2dScroll) {
+                view = get2DView(newContext);
+            } else {
+                view = new ScrollView(newContext);
+            }
         } else {
-            view = use2dScroll ? new TwoDScrollView(mContext) : new ScrollView(mContext);
+            if (use2dScroll) {
+                view = get2DView(mContext);
+            } else {
+                view = new ScrollView(mContext);
+            }
         }
 
         Context containerContext = mContext;
@@ -122,6 +135,14 @@ public class AndroidTreeView {
 
         expandNode(mRoot, false);
         return view;
+    }
+
+    @NonNull
+    private ViewGroup get2DView(Context context) {
+        TwoDScrollView twoDScrollView = new TwoDScrollView(context);
+        twoDScrollView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        twoDScrollView.setFillViewportWidth(fullWidth);
+        return twoDScrollView;
     }
 
     public View getView() {
@@ -201,6 +222,7 @@ public class AndroidTreeView {
     private void collapseNode(TreeNode node, final boolean includeSubnodes) {
         node.setExpanded(false);
         TreeNode.BaseNodeViewHolder nodeViewHolder = getViewHolderForNode(node);
+        nodeViewHolder.getNodeItemsView().removeAllViews();
 
         if (mUseDefaultAnimation) {
             collapse(nodeViewHolder.getNodeItemsView());
@@ -211,6 +233,8 @@ public class AndroidTreeView {
         if (includeSubnodes) {
             for (TreeNode n : node.getChildren()) {
                 collapseNode(n, includeSubnodes);
+                TreeNode.BaseNodeViewHolder childViewHolder = getViewHolderForNode(n);
+                childViewHolder.recycleView();
             }
         }
     }
@@ -341,4 +365,11 @@ public class AndroidTreeView {
         v.startAnimation(a);
     }
 
+    public void setFullWidth(boolean fullWidth) {
+        this.fullWidth = fullWidth;
+    }
+
+    public boolean isFullWidth() {
+        return fullWidth;
+    }
 }
