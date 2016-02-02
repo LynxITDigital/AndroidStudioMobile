@@ -51,9 +51,9 @@ public class FileFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String string = args.getString(FILE_CONTENTS);
-            if (string != null) {
-                setDisplayedFile(new File(string));
+            String filePath = args.getString(FILE_CONTENTS);
+            if (filePath != null) {
+                setDisplayedFile(new File(filePath));
             }
         }
 
