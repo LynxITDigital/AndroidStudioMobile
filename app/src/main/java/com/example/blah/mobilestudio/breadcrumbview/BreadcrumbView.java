@@ -79,10 +79,12 @@ public class BreadcrumbView extends LinearLayout {
                             for(int i = 0; i<p.getChildCount();i++) {
                                 View curV = p.getChildAt(i);
                                 if (curV != null && curV.getTag() != null && curV.getTag().toString().startsWith("brItem")) {
+                                    // reset the visual style of all breadcrumb items to "Not Selected"
                                     curV.setBackgroundColor(breadcrumbBgColor);
                                 }
                             }
                             currentPath = "/" + relativePathToCurrentCell;
+                            // set the visual style of selected breadcrumb item to "Selected"
                             v.setBackgroundColor(Color.BLUE);
                         }
                         if (mListener != null)
