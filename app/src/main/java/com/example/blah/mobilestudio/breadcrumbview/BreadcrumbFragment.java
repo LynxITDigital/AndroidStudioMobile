@@ -46,8 +46,8 @@ public class BreadcrumbFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-
         if(currentPath.length() > 0) {
+            currentPath = currentPath.replace(breadCrumb.rootPath,"");
             ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
             breadCrumb.SetElements(items);
             if (breadCrumb.mListener != null)
@@ -58,6 +58,9 @@ public class BreadcrumbFragment extends Fragment {
     public void setOnClickListener(OnItemSelectedListener onItemSelectedListener) {
         mListener  = onItemSelectedListener;
         breadCrumb.setOnClickListener(onItemSelectedListener);
+        ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
+        for(int i= 0; i<items.size()-1;i++)
+            breadCrumb.rootPath += "/" + items.get(i);
     }
 
     @Override

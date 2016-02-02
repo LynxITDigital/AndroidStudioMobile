@@ -24,6 +24,7 @@ public class BreadcrumbView extends LinearLayout {
     private ArrayList<String> listOfElements;
 
     Paint paintColorStyle;
+    String rootPath = "";
     String currentPath = "";
     String orientation = "";
     Boolean isPathable = true;
