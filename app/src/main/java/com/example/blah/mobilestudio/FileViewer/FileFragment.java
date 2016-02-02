@@ -12,6 +12,8 @@ import android.webkit.WebView;
 
 import com.example.blah.mobilestudio.R;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,8 +34,8 @@ public class FileFragment extends Fragment {
                                         + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     private static String FILE_CONTENTS = "File contents";
-    private static String HTML_OPENING = "<html><body><![CDATA[";
-    private static String HTML_CLOSING = "]]></html></body>";
+    private static String HTML_OPENING = "<html><body><p>";
+    private static String HTML_CLOSING = "</p></html></body>";
     WebView webView;
 
 
@@ -97,7 +99,7 @@ public class FileFragment extends Fragment {
                 br.close();
                 String returnString = stringBuilder.toString();
                 // Do not allow the CData to end
-                return returnString.replaceAll("]]>", "]]]]><![CDATA[>");
+                return StringEscapeUtils.escapeHtml4(returnString);
             } catch(IOException e){
                 Log.d("error",e.getMessage());
             }
@@ -111,6 +113,7 @@ public class FileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result){
+
             webView.loadData(HTML_OPENING + result + HTML_CLOSING, "text/html; charset=utf-8", null);
             endTime = Calendar.getInstance().getTimeInMillis();
             Log.d("time taken", String.valueOf(endTime - startTime));
