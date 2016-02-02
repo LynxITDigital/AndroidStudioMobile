@@ -92,14 +92,14 @@ public class FileFragment extends Fragment {
                 String line = null;
 
                 while ((line = br.readLine()) != null){
-                    line = line + "\n";
+                    line = line + System.getProperty("line.separator");
                     stringBuilder.append(line);
                 }
 
                 br.close();
                 String returnString = stringBuilder.toString();
                 // Do not allow the CData to end
-                return StringEscapeUtils.escapeHtml4(returnString);
+                return StringEscapeUtils.escapeHtml4(returnString).replaceAll("\n", "<br />\n");
             } catch(IOException e){
                 Log.d("error",e.getMessage());
             }
