@@ -34,7 +34,7 @@ public class FileFragment extends Fragment {
                                         System.getProperty("line.separator")
                                         + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
-    private static String FILE_CONTENTS = "File contents";
+    public static String FILE_CONTENTS = "File contents";
     private static String HTML_OPENING = "<html><body><p>";
     private static String HTML_CLOSING = "</p></html></body>";
     WebView webView;
