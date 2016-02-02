@@ -32,7 +32,7 @@
         <View
             android:layout_width="@dimen/resizer_move_size"
             android:layout_height="@dimen/resizer_move_size"
-            android:background="@drawable/move"
+            android:background="@drawable/bordered_move"
             android:layout_gravity="center" />
 
         <View
