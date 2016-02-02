@@ -48,16 +48,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the explorer fragment
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        folderStructureFragment = new FolderStructureFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-        folderStructureFragment.setOnClickListener(this);
-        folderStructureFragment.setArguments(bundle);
-
-        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-        resetBreadcrumb(filePath);
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
@@ -78,6 +68,21 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the necessary permissions for the app
         handlePermissions();
+
+        if (findViewById(R.id.explorer_fragment) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+            // Set up the explorer fragment
+            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            folderStructureFragment = new FolderStructureFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
+            folderStructureFragment.setArguments(bundle);
+
+            getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+            resetBreadcrumb(filePath);
+        }
     }
 
     @Override
@@ -97,10 +102,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                         .addToBackStack(null)
                         .commit();
             } else {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.explorer_fragment, fileFragment)
-                        .addToBackStack(null)
-                        .commit();
+                // Todo: should navigate to a new screen.
+//                getFragmentManager().beginTransaction()
+//                        .replace(R.id.explorer_fragment, fileFragment)
+//                        .addToBackStack(null)
+//                        .commit();
             }
         }
 
