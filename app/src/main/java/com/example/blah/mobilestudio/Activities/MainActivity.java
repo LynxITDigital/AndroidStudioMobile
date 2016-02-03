@@ -1,32 +1,38 @@
 package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
+import com.example.blah.mobilestudio.Resizer.HorizontalResizerFragment;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     // Value for the fragments to call when they need the root folder string
     public static final String ROOT_FOLDER = "root folder";
@@ -41,8 +47,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     // The various UI elements available
     Toolbar toolbar;
+
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
+    Fragment androidMonitor;
+    private HorizontalResizerFragment horizontalResizerFragment;
+    private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
 
     @Override
@@ -58,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setOnClickListener(this);
         folderStructureFragment.setArguments(bundle);
 
-        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -69,10 +77,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the file fragment
         fileFragment = new FileFragment();
+        horizontalResizerFragment = new HorizontalResizerFragment();
+        androidMonitorFragment = new AndroidMonitorFragment();
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                            .add(R.id.content_fragment, fileFragment)
-                            .commit();
+                .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
+                .add(R.id.explorer_fragment, folderStructureFragment)
+                .add(R.id.content_fragment, fileFragment)
+                .add(R.id.android_monitor, androidMonitorFragment)
+                .commit();
 
         // Initialise the root and current folder values
         if (rootFolder == null) {
@@ -198,11 +211,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setOnClickListener(this);
         folderStructureFragment.setArguments(b);
 
-        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
     }
 
     private void highlightFIle(String filePath) {
-        FolderStructureFragment folderFragment = (FolderStructureFragment) getFragmentManager().findFragmentById(R.id.explorer_fragment);
+        FolderStructureFragment folderFragment = (FolderStructureFragment) getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
         folderFragment.highlightFile(filePath);
     }
 
@@ -215,4 +228,109 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     }
 
+
+    public FileFragment getFileFragment() {
+        return fileFragment;
+    }
+
+    public FolderStructureFragment getFolderStructureFragment() {
+        return folderStructureFragment;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        View outerLayout = findViewById(R.id.screen_layout).getRootView();
+        outerLayout.post(new Runnable() {
+
+            LinearLayout outerLayout;
+
+            View heirarchyView;
+            View resizerView;
+            View contentView;
+
+            LinearLayout androidMonitorLayout;
+            RelativeLayout topLayout;
+
+            @Override
+            public void run() {
+
+                outerLayout = (LinearLayout) findViewById(R.id.screen_layout);
+
+                heirarchyView = folderStructureFragment.getView();
+                resizerView = horizontalResizerFragment.getView();
+                contentView = fileFragment.getView();
+
+                topLayout = (RelativeLayout) findViewById(R.id.top_layout);
+                androidMonitorLayout = (LinearLayout) findViewById(R.id.android_monitor_outer_layout);
+
+                widthChanges();
+                heightChanges();
+
+                //layout views again
+                outerLayout.requestLayout();
+            }
+
+            void widthChanges() {
+
+                //known information - the outerlayout is the width of the screen.
+                float thirdWidth = ((float) outerLayout.getWidth()) / 3f;
+//                Log.d(TAG, "widthChanges: outerLayout width " + outerLayout.getWidth());
+//                Log.d(TAG, "widthChanges: thirdWidth " + thirdWidth);
+
+                //known information - the resizerView is the width of the resizer view.
+                float halfOfResizerView = ((float) resizerView.getWidth()) / 2f;
+//                Log.d(TAG, "widthChanges: resizer view width " + resizerView.getWidth());
+//                Log.d(TAG, "widthChanges: half of resizer view " + halfOfResizerView);
+
+                //change the width of the hierarchy view to be before the resizer view
+                // and change the x position of the resizerview to be after the width of the hierarchy view
+                int newBeginningOfResizer = Math.round(thirdWidth - halfOfResizerView);
+//                Log.d(TAG, "widthChanges: new beginning of resizer " + newBeginningOfResizer);
+
+                heirarchyView.setX(0f);
+//                Log.d(TAG, "widthChanges: heirarchyView.getX() " + heirarchyView.getX());
+
+                heirarchyView.getLayoutParams().width = newBeginningOfResizer;
+//                Log.d(TAG, "widthChanges: heirarchyView.getLayoutParams().width " + heirarchyView.getLayoutParams().width);
+
+                resizerView.setX(newBeginningOfResizer);
+//                Log.d(TAG, "widthChanges: resizerView.getX() " + resizerView.getX());
+
+                //leave the resizer views width.
+                //set the content view to be after the resizer view.
+                //set the width of the content view to be the space that's left.
+                contentView.setX(newBeginningOfResizer + halfOfResizerView);
+//                Log.d(TAG, "widthChanges: contentview x " + contentView.getX());
+
+                contentView.getLayoutParams().width = Math.round((thirdWidth * 2) - halfOfResizerView);
+//                Log.d(TAG, "widthChanges: contentView.getLayoutParams().width " + contentView.getLayoutParams().width);
+            }
+
+            void heightChanges() {
+                //known information - the outerlayout is the width of the screen.
+                float thirdHeight = ((float) outerLayout.getHeight()) / 3f;
+                Log.d(TAG, "heightChanges: outerLayout.getHeight() " + outerLayout.getHeight());
+                Log.d(TAG, "heightChanges: third height " + thirdHeight);
+
+                //change the height and y position of the top_layout to be 2/3rds of the screen.
+                int newBeginningOfAndroidMonitor = Math.round(thirdHeight);
+                Log.d(TAG, "heightChanges: newBeginningOfAndroidMonitor " + newBeginningOfAndroidMonitor);
+
+                topLayout.setY(0f);
+                Log.d(TAG, "heightChanges: toplayout y " + topLayout.getY());
+                topLayout.getLayoutParams().height = newBeginningOfAndroidMonitor * 2;
+                Log.d(TAG, "heightChanges: topLayout.getLayoutParams().height " + topLayout.getLayoutParams().height);
+
+                //change the android monitor layout to have a y position below the top layout
+                // and change it to have a height of 1/3rd of the screen.s
+                androidMonitorLayout.setY(newBeginningOfAndroidMonitor * 2);
+                Log.d(TAG, "heightChanges: androidMonitorLayout.getY " + androidMonitorLayout.getY());
+                androidMonitorLayout.getLayoutParams().height = newBeginningOfAndroidMonitor;
+                Log.d(TAG, "heightChanges: androidMonitorLayout.getLayoutParams().height " + androidMonitorLayout.getLayoutParams().height);
+
+            }
+        });
+    }
 }
