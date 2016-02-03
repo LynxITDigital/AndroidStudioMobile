@@ -1,10 +1,9 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
-import com.example.blah.mobilestudio.FolderStructureFragment;
+import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
