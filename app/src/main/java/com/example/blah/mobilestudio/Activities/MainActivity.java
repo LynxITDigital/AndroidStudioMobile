@@ -69,9 +69,17 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         fileFragment = new FileFragment();
         horizontalResizerFragment = new HorizontalResizerFragment();
         androidMonitorFragment = new AndroidMonitorFragment();
+
+        folderStructureFragment = new FolderStructureFragment();
+        Bundle bundle = new Bundle();
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
+        folderStructureFragment.setArguments(bundle);
+
+        resetBreadcrumb(filePath);
+
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.content_fragment, fileFragment)
                 .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
                 .add(R.id.explorer_fragment, folderStructureFragment)
                 .add(R.id.content_fragment, fileFragment)
@@ -96,20 +104,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         Log.d("file-selected", path);
         File file = new File(path);
         if (!file.isDirectory()) {
-            fileFragment = new FileFragment();
-            Bundle args = new Bundle();
-            args.putString(FileFragment.FILE_CONTENTS, path);
-            fileFragment.setArguments(args);
-
-            if (findViewById(R.id.content_fragment) != null) {
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_fragment, fileFragment)
-                        .addToBackStack(null)
-                        .commit();
-            } else {
-                // Todo: should navigate to a new screen.
-            fileFragment.setDisplayedFile(file);
+            fileFragment.setDisplayedFile(new File(path));
         }
 
         if (breadFragment != null) {
@@ -255,8 +250,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             View resizerView;
             View contentView;
 
-            LinearLayout androidMonitorLayout;
             RelativeLayout topLayout;
+            LinearLayout androidMonitorLayout;
 
             @Override
             public void run() {
@@ -271,9 +266,10 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 androidMonitorLayout = (LinearLayout) findViewById(R.id.android_monitor_outer_layout);
 
                 widthChanges();
-                heightChanges();
+//                heightChanges();
 
                 //layout views again
+//                outerLayout.invalidate();
                 outerLayout.requestLayout();
             }
 
@@ -281,35 +277,36 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
                 //known information - the outerlayout is the width of the screen.
                 float thirdWidth = ((float) outerLayout.getWidth()) / 3f;
-//                Log.d(TAG, "widthChanges: outerLayout width " + outerLayout.getWidth());
-//                Log.d(TAG, "widthChanges: thirdWidth " + thirdWidth);
+                Log.d(TAG, "widthChanges: outerLayout width " + outerLayout.getWidth());
+                Log.d(TAG, "widthChanges: thirdWidth " + thirdWidth);
 
                 //known information - the resizerView is the width of the resizer view.
                 float halfOfResizerView = ((float) resizerView.getWidth()) / 2f;
-//                Log.d(TAG, "widthChanges: resizer view width " + resizerView.getWidth());
-//                Log.d(TAG, "widthChanges: half of resizer view " + halfOfResizerView);
+                Log.d(TAG, "widthChanges: resizer view width " + resizerView.getWidth());
+                Log.d(TAG, "widthChanges: half of resizer view " + halfOfResizerView);
 
                 //change the width of the hierarchy view to be before the resizer view
                 // and change the x position of the resizerview to be after the width of the hierarchy view
                 int newBeginningOfResizer = Math.round(thirdWidth - halfOfResizerView);
-//                Log.d(TAG, "widthChanges: new beginning of resizer " + newBeginningOfResizer);
+                Log.d(TAG, "widthChanges: new beginning of resizer " + newBeginningOfResizer);
 
                 heirarchyView.setX(0f);
-//                Log.d(TAG, "widthChanges: heirarchyView.getX() " + heirarchyView.getX());
+                Log.d(TAG, "widthChanges: heirarchyView.getX() " + heirarchyView.getX());
 
                 heirarchyView.getLayoutParams().width = newBeginningOfResizer;
-//                Log.d(TAG, "widthChanges: heirarchyView.getLayoutParams().width " + heirarchyView.getLayoutParams().width);
+                Log.d(TAG, "widthChanges: heirarchyView.getLayoutParams().width " + heirarchyView.getLayoutParams().width);
 
                 resizerView.setX(newBeginningOfResizer);
-//                Log.d(TAG, "widthChanges: resizerView.getX() " + resizerView.getX());
-
-                //leave the resizer views width.
-                //set the content view to be after the resizer view.
-                //set the width of the content view to be the space that's left.
-                contentView.setX(newBeginningOfResizer + halfOfResizerView);
+                Log.d(TAG, "widthChanges: resizerView.getX() " + resizerView.getX());
+                Log.d(TAG, "widthChanges: resizerView.getLayoutParams().width " + resizerView.getLayoutParams().width);
+//
+//                //leave the resizer views width.
+//                //set the content view to be after the resizer view.
+//                //set the width of the content view to be the space that's left.
+//                contentView.setX(newBeginningOfResizer + halfOfResizerView);
 //                Log.d(TAG, "widthChanges: contentview x " + contentView.getX());
-
-                contentView.getLayoutParams().width = Math.round((thirdWidth * 2) - halfOfResizerView);
+//
+//                contentView.getLayoutParams().width = Math.round((thirdWidth * 2) - halfOfResizerView);
 //                Log.d(TAG, "widthChanges: contentView.getLayoutParams().width " + contentView.getLayoutParams().width);
             }
 

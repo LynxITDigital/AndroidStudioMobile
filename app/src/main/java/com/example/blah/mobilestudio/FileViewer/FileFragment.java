@@ -52,15 +52,7 @@ public class FileFragment extends Fragment {
         webView = (WebView) rootView.findViewById(R.id.web_layout);
         imageView = (ImageView) rootView.findViewById(R.id.image_layout);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            String filePath = args.getString(FILE_CONTENTS);
-            if (filePath != null) {
-                setDisplayedFile(new File(filePath));
-            } else {
-                displayFileText();
-            }
-        }
+        displayFileText();
 
         return rootView;
     }
@@ -211,5 +203,6 @@ public class FileFragment extends Fragment {
      */
     public void setDisplayedFile(File displayedFile) {
         this.displayedFile = displayedFile;
+        displayFileText();
     }
 }
