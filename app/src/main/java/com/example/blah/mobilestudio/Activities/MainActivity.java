@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
+                .add(R.id.explorer_fragment, folderStructureFragment)
                 .add(R.id.content_fragment, fileFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
                 .commit();
@@ -97,49 +98,18 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the necessary permissions for the app
         handlePermissions();
-
-        if (findViewById(R.id.explorer_fragment) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-            // Set up the explorer fragment
-            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            folderStructureFragment = new FolderStructureFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-            folderStructureFragment.setArguments(bundle);
-
-            getSupportFragmentManager().beginTransaction().add(R.id.explorer_fragment, folderStructureFragment).commit();
-            resetBreadcrumb(filePath);
-        }
     }
 
     @Override
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
         File file = new File(path);
-        if (!file.isDirectory()) {
-            fileFragment = new FileFragment();
-            Bundle args = new Bundle();
-            args.putString(FileFragment.FILE_CONTENTS, path);
-            fileFragment.setArguments(args);
-
-            if (findViewById(R.id.content_fragment) != null) {
-
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_fragment, fileFragment)
-                        .addToBackStack(null)
-                        .commit();
-            } else {
-                // Todo: should navigate to a new screen.
-//                getFragmentManager().beginTransaction()
-//                        .replace(R.id.explorer_fragment, fileFragment)
-//                        .addToBackStack(null)
-//                        .commit();
-            }
+        if(!file.isDirectory()){
+            fileFragment.setDisplayedFile(file);
         }
 
-        if (breadFragment != null) {
+        if(breadFragment != null)
+        {
             breadFragment.currentPath = path;
             breadFragment.onResume();
         }
@@ -282,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
             LinearLayout androidMonitorLayout;
             RelativeLayout topLayout;
-            
+
             @Override
             public void run() {
 
