@@ -271,6 +271,13 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 //layout views again
 //                outerLayout.invalidate();
                 outerLayout.requestLayout();
+//                FrameLayout explorerFrame = (FrameLayout)findViewById(R.id.explorer_content_resizer_fragment);
+
+                resizerView.setX(194f);
+
+                Log.d(TAG, "run: explorerFrame.getX() " + resizerView.getX());
+                Log.d(TAG, "run: explorerFrame.getLayoutParams().width " + resizerView.getLayoutParams().width);
+                resizerView.invalidate();
             }
 
             void widthChanges() {
@@ -296,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 heirarchyView.getLayoutParams().width = newBeginningOfResizer;
                 Log.d(TAG, "widthChanges: heirarchyView.getLayoutParams().width " + heirarchyView.getLayoutParams().width);
 
+                Log.d(TAG, "widthChanges: resizerView.getX() " + resizerView.getX());
                 resizerView.setX(newBeginningOfResizer);
                 Log.d(TAG, "widthChanges: resizerView.getX() " + resizerView.getX());
                 Log.d(TAG, "widthChanges: resizerView.getLayoutParams().width " + resizerView.getLayoutParams().width);
