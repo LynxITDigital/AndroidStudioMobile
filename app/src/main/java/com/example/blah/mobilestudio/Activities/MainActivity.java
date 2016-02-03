@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
-    Fragment androidMonitor;
     private HorizontalResizerFragment horizontalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
@@ -59,14 +57,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Set up the explorer fragment
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        folderStructureFragment = new FolderStructureFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-        folderStructureFragment.setOnClickListener(this);
-        folderStructureFragment.setArguments(bundle);
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
@@ -81,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         androidMonitorFragment = new AndroidMonitorFragment();
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
                 .add(R.id.content_fragment, fileFragment)
+                .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
                 .commit();
 
@@ -126,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
             if (findViewById(R.id.content_fragment) != null) {
 
-                getFragmentManager().beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_fragment, fileFragment)
                         .addToBackStack(null)
                         .commit();
@@ -251,10 +241,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     private void resetBreadcrumb(String filePath) {
         //Horizontal Breadcrumb reset
-        breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
+        breadFragment = (BreadcrumbFragment) getSupportFragmentManager().findFragmentById(R.id.topBreadFragment);
         breadFragment.currentPath = filePath;
         breadFragment.setOnClickListener(this);
-        getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
+        getSupportFragmentManager()
+                .beginTransaction().
+                replace(R.id.topBreadFragment, breadFragment).commit();
 
     }
 

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.blah.mobilestudio.Activities.MainActivity;
+import com.example.blah.mobilestudio.FileViewer.FileFragment;
+import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 
 /**
