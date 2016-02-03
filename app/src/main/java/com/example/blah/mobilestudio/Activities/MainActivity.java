@@ -69,20 +69,20 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         // Set up the necessary permissions for the app
         handlePermissions();
 
-        if (findViewById(R.id.explorer_fragment) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-            // Set up the explorer fragment
-            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            folderStructureFragment = new FolderStructureFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-            folderStructureFragment.setArguments(bundle);
-
-            getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-            resetBreadcrumb(filePath);
-        }
+//        if (findViewById(R.id.explorer_fragment) != null) {
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//            // Set up the explorer fragment
+//            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            folderStructureFragment = new FolderStructureFragment();
+//            Bundle bundle = new Bundle();
+//            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
+//            folderStructureFragment.setArguments(bundle);
+//
+//            getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+//            resetBreadcrumb(filePath);
+//        }
     }
 
     @Override
@@ -95,18 +95,17 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             args.putString(FileFragment.FILE_CONTENTS, path);
             fileFragment.setArguments(args);
 
+            // Two-pane display
             if (findViewById(R.id.content_fragment) != null) {
-
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_fragment, fileFragment)
+                        .addToBackStack("A_B_TAG")
+                        .commit();
+            } else {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_fragment, fileFragment)
                         .addToBackStack(null)
                         .commit();
-            } else {
-                // Todo: should navigate to a new screen.
-//                getFragmentManager().beginTransaction()
-//                        .replace(R.id.explorer_fragment, fileFragment)
-//                        .addToBackStack(null)
-//                        .commit();
             }
         }
 

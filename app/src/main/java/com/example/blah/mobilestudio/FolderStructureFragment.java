@@ -34,11 +34,6 @@ public class FolderStructureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.project_navi_fragment, container, false);
-        ViewGroup containerView = (ViewGroup) rootView.findViewById(R.id.container);
-
-        Bundle b = getArguments();
-        String filePath = b.getString(FILE_PATH);
-        addFileTreeView(containerView, filePath);
 
         if (savedInstanceState != null) {
             tState = savedInstanceState.getString("tState");
@@ -57,6 +52,12 @@ public class FolderStructureFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        ViewGroup containerView = (ViewGroup) getActivity().findViewById(R.id.container);
+
+        Bundle b = getArguments();
+        String filePath = b.getString(FILE_PATH);
+        addFileTreeView(containerView, filePath);
 
         if (tState != null) {
             tView.restoreState(tState);
