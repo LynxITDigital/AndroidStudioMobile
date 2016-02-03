@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,9 +154,42 @@ public class FileFragment extends Fragment {
         webView.setVisibility(View.GONE);
         imageView.setVisibility(View.VISIBLE);
         // set the image file bitmap
-        Bitmap imageBitmap = BitmapFactory.decodeFile(displayedFile.getAbsolutePath());
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap imageBitmap = BitmapFactory.decodeFile(displayedFile.getAbsolutePath(), options);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            options.inSampleSize = calculateInSampleSize(options, 200, 200);
+        }
+
+        options.inJustDecodeBounds = false;
+        imageBitmap = BitmapFactory.decodeFile(displayedFile.getAbsolutePath(), options);
 
         imageView.setImageBitmap(imageBitmap);
+    }
+
+    // Calculates the number of times the image's height will have to be halved before it is
+    // below the required height and width.
+    // The options will use this to calculate the new bitmap.
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of the image
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if(height > reqHeight || width > reqWidth) {
+            int halfHeight = height/ 2;
+            int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize that has a power of 2 and keeps both and and
+            // width larger than the requested height and width
+            while((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth){
+                inSampleSize *= 2;
+            }
+
+        }
+        return inSampleSize;
+
     }
 
     // Loads a webview from an input string
