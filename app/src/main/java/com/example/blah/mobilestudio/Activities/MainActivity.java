@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         }
 
         if (breadFragment != null) {
-        {
             breadFragment.currentPath = path;
             breadFragment.onResume();
         }
@@ -324,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 int newBeginningOfAndroidMonitor = Math.round(thirdHeight);
                 Log.d(TAG, "heightChanges: newBeginningOfAndroidMonitor " + newBeginningOfAndroidMonitor);
 
-                topLayout.setY(0f);
+//                topLayout.setY(0f);
                 Log.d(TAG, "heightChanges: toplayout y " + topLayout.getY());
                 topLayout.getLayoutParams().height = newBeginningOfAndroidMonitor * 2;
                 Log.d(TAG, "heightChanges: topLayout.getLayoutParams().height " + topLayout.getLayoutParams().height);
