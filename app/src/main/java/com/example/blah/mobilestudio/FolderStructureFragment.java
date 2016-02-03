@@ -96,9 +96,9 @@ public class FolderStructureFragment extends Fragment {
     }
 
     /**
-     * Expand folder view to the file following the path and highlight the node.
+     *  Expand folder view to the file following the path and highlight the node.
      *
-     * @param path an absolute path giving the location of the file
+     *  @param path an absolute path giving the location of the file
      */
     public void highlightFile(String path) {
         tView.highlight(path);
