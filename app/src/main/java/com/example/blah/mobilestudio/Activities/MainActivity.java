@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -68,21 +67,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the necessary permissions for the app
         handlePermissions();
-
-//        if (findViewById(R.id.explorer_fragment) != null) {
-//            if (savedInstanceState != null) {
-//                return;
-//            }
-//            // Set up the explorer fragment
-//            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            folderStructureFragment = new FolderStructureFragment();
-//            Bundle bundle = new Bundle();
-//            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-//            folderStructureFragment.setArguments(bundle);
-//
-//            getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-//            resetBreadcrumb(filePath);
-//        }
     }
 
     @Override
@@ -99,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             if (findViewById(R.id.content_fragment) != null) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_fragment, fileFragment)
-                        .addToBackStack("A_B_TAG")
+                        .addToBackStack(null)
                         .commit();
             } else {
                 getFragmentManager().beginTransaction()
@@ -112,6 +96,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
