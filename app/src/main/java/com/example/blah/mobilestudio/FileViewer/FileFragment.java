@@ -211,6 +211,5 @@ public class FileFragment extends Fragment {
      */
     public void setDisplayedFile(File displayedFile) {
         this.displayedFile = displayedFile;
-        displayFileText();
     }
 }
