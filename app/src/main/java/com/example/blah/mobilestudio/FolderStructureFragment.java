@@ -24,6 +24,7 @@ public class FolderStructureFragment extends Fragment {
     private OnFileSelectedListener fileSelectedListener;
     public static final String FILE_PATH = "FILE_PATH";
     private String tState;
+    private String selectedFilePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class FolderStructureFragment extends Fragment {
 
         if (savedInstanceState != null) {
             tState = savedInstanceState.getString("tState");
+            selectedFilePath = savedInstanceState.getString("selectedFilePath");
         }
 
         return rootView;
@@ -59,20 +61,24 @@ public class FolderStructureFragment extends Fragment {
         if (tState != null) {
             tView.restoreState(tState);
         }
+
+        if (selectedFilePath != null) {
+            tView.highlight(selectedFilePath);
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(context instanceof Activity){
+            if (context instanceof Activity) {
                 doAttach((Activity) context);
             }
         }
     }
 
     @Override
-    public void onAttach(Activity activity){
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             doAttach(activity);
@@ -80,7 +86,7 @@ public class FolderStructureFragment extends Fragment {
     }
 
 
-    private void doAttach(Activity activity){
+    private void doAttach(Activity activity) {
         try {
             fileSelectedListener = (OnFileSelectedListener) activity;
         } catch (ClassCastException e) {
@@ -93,6 +99,7 @@ public class FolderStructureFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("tState", tView.getSaveState());
+        outState.putString("selectedFilePath", tView.getSelectedFilePath());
     }
 
     /**
@@ -125,9 +132,11 @@ public class FolderStructureFragment extends Fragment {
         @Override
         public void onClick(TreeNode node, Object value) {
             FileNodeViewHolder.IconTreeItem item = (FileNodeViewHolder.IconTreeItem) value;
+            String filePath = item.file.getAbsolutePath();
             tView.setHighlightedNode(node);
+            tView.setSelectedFilePath(filePath);
             if (fileSelectedListener != null) {
-                fileSelectedListener.onFileSelected(item.file.getAbsolutePath());
+                fileSelectedListener.onFileSelected(filePath);
             }
         }
     };

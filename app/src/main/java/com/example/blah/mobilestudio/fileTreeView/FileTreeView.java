@@ -16,6 +16,7 @@ import java.io.File;
  */
 public class FileTreeView extends AndroidTreeView {
     private TreeNode highlightedNode;
+    private String selectedFilePath;
 
     public FileTreeView(Context context, File file) {
         super(context);
@@ -23,7 +24,6 @@ public class FileTreeView extends AndroidTreeView {
         setUpNode(root, file);
         setRoot(root);
 
-        setDefaultAnimation(true);
         setDefaultViewHolder(FileNodeViewHolder.class);
         setUse2dScroll(true);
         setFullWidth(true);
@@ -34,6 +34,7 @@ public class FileTreeView extends AndroidTreeView {
         TreeNode treeNode = expandTo2(path, mRoot);
         if (treeNode != null) {
             setHighlightedNode(treeNode);
+            selectedFilePath = path;
         }
     }
 
@@ -129,5 +130,13 @@ public class FileTreeView extends AndroidTreeView {
         this.highlightedNode = highlightedNode;
         view = (TreeNodeWrapperView) this.highlightedNode.getViewHolder().getView();
         view.getNodeContainer().setBackgroundColor(Color.GREEN);
+    }
+
+    public String getSelectedFilePath() {
+        return selectedFilePath;
+    }
+
+    public void setSelectedFilePath(String selectedFilePath) {
+        this.selectedFilePath = selectedFilePath;
     }
 }
