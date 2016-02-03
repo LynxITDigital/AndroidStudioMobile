@@ -2,6 +2,8 @@ package com.example.blah.mobilestudio.FileViewer;
 
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageView;
 
 
 import com.example.blah.mobilestudio.R;
@@ -31,21 +34,22 @@ public class FileFragment extends Fragment {
     // The file to be displayed
     private File displayedFile;
     private static String  DEFAULT_TEXT = "No files are open"  +
-                                        System.getProperty("line.separator")
-                                        + "Select a file to open from the explorer";
+            System.getProperty("line.separator")
+            + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     public static String FILE_CONTENTS = "File contents";
     private static String HTML_OPENING = "<html><body><p>";
     private static String HTML_CLOSING = "</p></html></body>";
+    private static String[] IMAGE_FORMATS = {"jpeg", "png", "bmp", "webp", "jpg"};
+
     WebView webView;
+    ImageView imageView;
 
-
-
-    // TODO save file Contents in on save state
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         webView = (WebView) rootView.findViewById(R.id.web_layout);
+        imageView = (ImageView) rootView.findViewById(R.id.image_layout);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -70,8 +74,21 @@ public class FileFragment extends Fragment {
     private void displayFileText() {
         // If no file has been selected display the defualt text instructing the user to find a file
         if(displayedFile == null){
-
+            loadWebView(DEFAULT_TEXT);
             return;
+        }
+
+        // Check if the file is an image by checking if the extension is jpeg or png
+        String[] fileNameComponents = displayedFile.getAbsolutePath().split("\\.");
+        // Extension will be the final component after the "."
+        if(fileNameComponents.length > 0){
+            String extension = fileNameComponents[fileNameComponents.length - 1];
+            for(int i = 0; i < IMAGE_FORMATS.length; i++){
+                if(extension.equals(IMAGE_FORMATS[i])){
+                    loadImageFile();
+                    return;
+                }
+            }
         }
 
         new FileOpenerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -94,7 +111,6 @@ public class FileFragment extends Fragment {
 
             // Open the file and read each lines
             try {
-                Log.d("this", "does this happen");
                 BufferedReader br = new BufferedReader(new FileReader(displayedFile));
                 StringBuilder stringBuilder = new StringBuilder();
                 String line = null;
@@ -118,11 +134,32 @@ public class FileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result){
-            webView.loadData(HTML_OPENING + result + HTML_CLOSING, "text/html; charset=utf-8", null);
+            loadWebView(result);
             endTime = Calendar.getInstance().getTimeInMillis();
             Log.d("time taken", String.valueOf(endTime - startTime));
         }
 
+    }
+
+    // Loads an image file into the view
+    // Assumes displayed file is an image
+    private void loadImageFile(){
+        // clear the webview if there is one
+        webView.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
+        // set the image file bitmap
+        Bitmap imageBitmap = BitmapFactory.decodeFile(displayedFile.getAbsolutePath());
+
+        imageView.setImageBitmap(imageBitmap);
+    }
+
+    // Loads a webview from an input string
+    private void loadWebView(String input){
+        // clear the image view if there is one
+        imageView.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+        // Set the webview to display the input string
+        webView.loadData(HTML_OPENING + input + HTML_CLOSING, "text/html; charset=utf-8", null);
     }
 
     public File getDisplayedFile() {
@@ -134,7 +171,7 @@ public class FileFragment extends Fragment {
      *                      opened in the FileFragment.
      */
     public void setDisplayedFile(File displayedFile) {
-        displayFileText();
         this.displayedFile = displayedFile;
+        displayFileText();
     }
 }
