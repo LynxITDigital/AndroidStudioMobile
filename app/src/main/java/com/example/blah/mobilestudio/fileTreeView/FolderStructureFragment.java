@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio;
+package com.example.blah.mobilestudio.fileTreeView;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.fileTreeView.FileNodeViewHolder;
 import com.example.blah.mobilestudio.fileTreeView.FileTreeView;
 import com.example.blah.mobilestudio.treeview.TreeNode;
