@@ -56,10 +56,11 @@ public class FileFragment extends Fragment {
             String filePath = args.getString(FILE_CONTENTS);
             if (filePath != null) {
                 setDisplayedFile(new File(filePath));
+            } else {
+                displayFileText();
             }
         }
 
-        displayFileText();
         return rootView;
     }
 
@@ -126,7 +127,6 @@ public class FileFragment extends Fragment {
                 return StringEscapeUtils.escapeHtml4(returnString).replaceAll("\n", "<br />\n");
             } catch(IOException e){
                 Log.d("error",e.getMessage());
-
             }
             return null;
         }
@@ -134,7 +134,12 @@ public class FileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result){
-            loadWebView(result);
+            if(result == null){
+                loadWebView(ERROR_TEXT);
+            } else {
+                loadWebView(result);
+            }
+
             endTime = Calendar.getInstance().getTimeInMillis();
             Log.d("time taken", String.valueOf(endTime - startTime));
         }
