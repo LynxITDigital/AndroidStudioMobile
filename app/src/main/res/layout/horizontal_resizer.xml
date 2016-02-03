@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/line"
+    android:layout_width="@dimen/resizer_move_size"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal" >
+
+    <View
+        android:id="@+id/top_line"
+        android:layout_width="@dimen/resizer_move_size"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/black" />
+
+    <View
+        android:id="@+id/resizer_view"
+        android:layout_width="@dimen/resizer_move_size"
+        android:layout_height="@dimen/resizer_move_size"
+        android:background="@drawable/bordered_move"
+        android:layout_gravity="center" />
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="@dimen/resizer_move_size"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/black" />
+
+</LinearLayout>
