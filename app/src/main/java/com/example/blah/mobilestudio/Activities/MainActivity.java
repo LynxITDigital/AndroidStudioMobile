@@ -13,9 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
@@ -69,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         // Set up the file fragment
         fileFragment = new FileFragment();
         horizontalResizerFragment = new HorizontalResizerFragment();
+        Bundle horizontalResizerBundle = new Bundle();
+        horizontalResizerBundle.putInt(HorizontalResizerFragment.LEFTVIEW_BUNDLE_KEY, R.id.explorer_fragment);
+        horizontalResizerBundle.putInt(HorizontalResizerFragment.MIDDLEVIEW_BUNDLE_KEY, R.id.explorer_content_resizer_fragment);
+        horizontalResizerBundle.putInt(HorizontalResizerFragment.RIGHTVIEW_BUNDLE_KEY, R.id.content_fragment);
+        horizontalResizerFragment.setArguments(horizontalResizerBundle);
+
         androidMonitorFragment = new AndroidMonitorFragment();
 
         folderStructureFragment = new FolderStructureFragment();
@@ -245,28 +248,26 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         View outerLayout = findViewById(R.id.screen_layout).getRootView();
         outerLayout.post(new Runnable() {
 
-            LinearLayout outerLayout;
+            View outerLayout;
 
-            FrameLayout heirarchyFrameLayout;
-            FrameLayout resizerFrameLayout;
-            FrameLayout contentFrameLayout;
-            RelativeLayout verticalBreadcrumbRelativeLayout;
+            View heirarchyFrameLayout;
+            View resizerFrameLayout;
+            View contentFrameLayout;
 
-            RelativeLayout topLayout;
-            LinearLayout androidMonitorLayout;
+            View topLayout;
+            View androidMonitorLayout;
 
             @Override
             public void run() {
 
-                outerLayout = (LinearLayout) findViewById(R.id.screen_layout);
+                outerLayout = findViewById(R.id.screen_layout);
 
-                heirarchyFrameLayout = (FrameLayout)findViewById(R.id.explorer_fragment);
-                resizerFrameLayout = (FrameLayout)findViewById(R.id.explorer_content_resizer_fragment);
-                contentFrameLayout = (FrameLayout)findViewById(R.id.content_fragment);
-                verticalBreadcrumbRelativeLayout = (RelativeLayout)findViewById(R.id.verticalTabFragment);
+                heirarchyFrameLayout = findViewById(R.id.explorer_fragment);
+                resizerFrameLayout = findViewById(R.id.explorer_content_resizer_fragment);
+                contentFrameLayout = findViewById(R.id.content_fragment);
 
-                topLayout = (RelativeLayout) findViewById(R.id.top_layout);
-                androidMonitorLayout = (LinearLayout) findViewById(R.id.android_monitor_outer_layout);
+                topLayout = findViewById(R.id.top_layout);
+                androidMonitorLayout = findViewById(R.id.android_monitor_outer_layout);
 
                 widthChanges();
                 heightChanges();

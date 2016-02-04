@@ -1,5 +1,6 @@
 package com.example.blah.mobilestudio.Resizer;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,9 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.blah.mobilestudio.Activities.MainActivity;
-import com.example.blah.mobilestudio.FileViewer.FileFragment;
-import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 
 /**
@@ -19,8 +17,11 @@ import com.example.blah.mobilestudio.R;
 public class HorizontalResizerFragment extends Fragment {
 
     String TAG = HorizontalResizerFragment.class.getSimpleName();
-    private View resizerView;
-    private Fragment leftFragment, rightFragment;
+    private View leftView, middleView, rightView, resizerView;
+
+    public static final String LEFTVIEW_BUNDLE_KEY = "LEFTVIEW";
+    public static final String MIDDLEVIEW_BUNDLE_KEY = "MIDDLEVIEW";
+    public static final String RIGHTVIEW_BUNDLE_KEY = "RIGHTVIEW";
 
     @Nullable
     @Override
@@ -31,34 +32,45 @@ public class HorizontalResizerFragment extends Fragment {
         resizerView = rootView.findViewById(R.id.resizer_view);
 
         resizerView.setOnTouchListener(touchListener);
-        return rootView;
 
+        Activity activity = getActivity();
+
+        Bundle bundle = getArguments();
+        int leftKey =  bundle.getInt(LEFTVIEW_BUNDLE_KEY, 0);
+        int middleKey = bundle.getInt(MIDDLEVIEW_BUNDLE_KEY, 0);
+        int rightKey = bundle.getInt(RIGHTVIEW_BUNDLE_KEY, 0);
+        if(leftKey == 0 || middleKey == 0 || rightKey == 0) {
+            return rootView;
+        }
+
+        leftView = activity.findViewById(leftKey);
+        middleView = activity.findViewById(middleKey);
+        rightView = activity.findViewById(rightKey);
+        return rootView;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        MainActivity mainActivity = (MainActivity)getActivity();
-        leftFragment = mainActivity.getFolderStructureFragment();
-        rightFragment = mainActivity.getFileFragment();
     }
+
+    LocationState locationState = null;
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
-                    beginDrag(event);
+                    locationState = new LocationState(leftView, middleView, rightView, true, event);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
-                    continueDrag(event);
+                    locationState.move(event);
                     break;
                 }
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL: {
-                    finishDrag(event);
+                    locationState = null;
                     break;
                 }
                 default: {
@@ -67,25 +79,5 @@ public class HorizontalResizerFragment extends Fragment {
             }
             return true;
         }
-
     };
-
-    LocationState locationState = null;
-
-    private void beginDrag(MotionEvent motionEvent) {
-        locationState = new LocationState(leftFragment, this, rightFragment, true);
-        locationState.move(motionEvent);
-//        Log.d(TAG, "beginDrag: x " + motionEvent.getX() + " y " + motionEvent.getY());
-
-    }
-
-    private void continueDrag(MotionEvent motionEvent) {
-        locationState.move(motionEvent);
-//        Log.d(TAG, "continueDrag: x " + motionEvent.getX() + " y " + motionEvent.getY());
-    }
-
-    private void finishDrag(MotionEvent motionEvent) {
-        locationState = null;
-//        Log.d(TAG, "finishDrag: x " + motionEvent.getX() + " y " + motionEvent.getY());
-    }
 }
