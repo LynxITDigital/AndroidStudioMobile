@@ -16,8 +16,8 @@
         android:background="#267ae1"
         custom:orientation="horizontal"
         custom:breadcrumbBgColor="#267ae1"
-        custom:breadcrumbTextColor = "#8ae2ff"
-        custom:breadcrumbTextSize = "14"
+        custom:breadcrumbTextColor = "#07313e"
+        custom:breadcrumbTextSize = "60"
         custom:rootPath=""
         />
     </HorizontalScrollView>
