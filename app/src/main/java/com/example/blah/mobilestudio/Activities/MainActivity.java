@@ -2,7 +2,9 @@ package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setOrientation();
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
@@ -307,5 +310,14 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 androidMonitorLayout.getLayoutParams().height = newBeginningOfAndroidMonitor;
             }
         });
+    }
+
+    public void setOrientation() {
+        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
     }
 }

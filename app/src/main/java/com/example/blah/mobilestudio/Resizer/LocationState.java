@@ -1,5 +1,6 @@
 package com.example.blah.mobilestudio.Resizer;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ public class LocationState {
     ViewGroup.LayoutParams firstParams, secondParams, thirdParams;
     boolean isHorizontal;
     Coordinate previousCoordinate;
+    MovementDirection direction = null;
 
     public LocationState(View firstView, View secondView, View thirdView, boolean isHorizontal, MotionEvent event) {
         this.firstView = firstView;
@@ -41,125 +43,70 @@ public class LocationState {
 
         StringBuilder logString = new StringBuilder();
 
-        String direction = "";
         float amount = 0.0f;
 
-        if (previousCoordinate.x > motionEvent.getX()) {
-            direction = " left ";
+        if(isHorizontal) {
+            logString.append(" prev x ")
+                    .append(previousCoordinate.x)
+                    .append(" x ")
+                    .append(motionEvent.getX());
+
             amount = previousCoordinate.x - motionEvent.getX();
-            moveLeft(amount);
-        } else if (previousCoordinate.x < motionEvent.getX()) {
-            direction = " right ";
-            amount = motionEvent.getX() - previousCoordinate.x;
-            moveRight(amount);
-        }
-
-        if (previousCoordinate.y > motionEvent.getY()) {
-            direction = " down ";
+            moveHorizontally(amount);
+        } else {
             amount = previousCoordinate.y - motionEvent.getY();
-            moveDown(amount);
-        } else if (previousCoordinate.y < motionEvent.getY()) {
-            direction = " up ";
-            amount = motionEvent.getY() - previousCoordinate.y;
-            moveUp(amount);
+            moveVertically(amount);
+
+            logString.append(" prev y ")
+                    .append(previousCoordinate.y)
+                    .append(" y ")
+                    .append(motionEvent.getY())
+                    .append(" direction vertically "));
         }
 
-        if (previousCoordinate.y == motionEvent.getY() &&
-                previousCoordinate.x == motionEvent.getX()) {
-            direction = " nothing ";
-            amount = 0.0f;
-        }
-        logString.append(direction)
-                .append(" prev x ")
-                .append(previousCoordinate.x)
-                .append(" prev y ")
-                .append(previousCoordinate.y)
-                .append(" x ")
-                .append(motionEvent.getX())
-                .append(" y ")
-                .append(motionEvent.getY())
                 .append(" amount ")
                 .append(amount);
-//        Log.d(TAG, "move: " + logString.toString());
+        Log.d(TAG, "move: " + logString.toString());
         previousCoordinate = new Coordinate(motionEvent.getX(), motionEvent.getY());
 
     }
+    private void moveHorizontally(float offset) {
+        StringBuilder logString = new StringBuilder();
+            logString.append(" firstParams.width ")
+                    .append(firstParams.width)
+                    .append(" secondView.getX() ")
+                    .append(secondView.getX())
+                    .append(" thirdParams.width ")
+                    .append(thirdParams.width)
+                    .append(" firstView.getWidth() ")
+                    .append(firstView.getWidth())
+                    .append(" thirdView.getWidth() ")
+                    .append(thirdView.getWidth());
 
-    private void moveLeft(float offset) {
-        if (isHorizontal) {
-            StringBuilder logString = new StringBuilder();
-            if (offset > 0) {
-                logString.append(" firstParams.width ")
-                        .append(firstParams.width)
-                        .append(" secondView.getX() ")
-                        .append(secondView.getX())
-                        .append(" thirdParams.width ")
-                        .append(thirdParams.width);
-                logString.append(" firstView.getWidth() ")
-                        .append(firstView.getWidth())
-                        .append(" thirdView.getWidth() ")
-                        .append(thirdView.getWidth());
+        firstParams.width = Math.round(firstParams.width - offset);
+        thirdParams.width = Math.round(thirdParams.width + offset);
+        firstView.requestLayout();
 
-                firstParams.width = Math.round(firstView.getWidth() - offset);
-                thirdParams.width = Math.round(thirdView.getWidth() + offset);
-                firstView.requestLayout();
-//                thirdView.requestLayout();
-            } else if (offset == 0) {
-                //nothing to do
-            } else {
-                //perhaps it should be going the other way.
-                offset *= -1;
-                moveRight(offset);
-            }
-//            Log.d(TAG, "moveLeft: " + logString.toString());
-        }
+//        Log.d(TAG, "moveLeft: " + logString.toString());
     }
 
-    private void moveRight(float offset) {
-        if (isHorizontal) {
-            if (offset > 0) {
-                firstParams.width = Math.round(firstView.getWidth() + offset);
-                thirdParams.width = Math.round(thirdView.getWidth() - offset);
-                firstView.requestLayout();
-            } else if (offset == 0) {
-                //nothing to do
-            } else {
-                //perhaps it should be going the other way.
-                offset *= -1;
-                moveLeft(offset);
-            }
-        }
-    }
+    private void moveVertically(float offset) {
+        StringBuilder logString = new StringBuilder();
+        logString.append(" firstParams.height ")
+                .append(firstParams.height)
+                .append(" secondView.getY() ")
+                .append(secondView.getY())
+                .append(" thirdParams.height ")
+                .append(thirdParams.height)
+                .append(" firstView.getHeight() ")
+                .append(firstView.getHeight())
+                .append(" thirdView.getWidth() ")
+                .append(thirdView.getHeight());
 
-    private void moveUp(float offset) {
-        if (!isHorizontal) {
-            if (offset > 0) {
-                firstParams.height = Math.round(firstView.getHeight() + offset);
-                thirdParams.height = Math.round(thirdView.getHeight() - offset);
-                firstView.requestLayout();
-            } else if (offset == 0) {
-                //nothing to do
-            } else {
-                //perhaps it should be going the other way.
-                offset *= -1;
-                moveDown(offset);
-            }
-        }
-    }
+        firstParams.height = Math.round(firstParams.height + offset);
+        thirdParams.height = Math.round(thirdParams.height - offset);
+        firstView.requestLayout();
 
-    private void moveDown(float offset) {
-        if (!isHorizontal) {
-            if (offset > 0) {
-                firstParams.height = Math.round(firstView.getHeight() - offset);
-                thirdParams.height = Math.round(thirdView.getHeight() + offset);
-                firstView.requestLayout();
-            } else if (offset == 0) {
-                //nothing to do
-            } else {
-                //perhaps it should be going the other way.
-                offset *= -1;
-                moveUp(offset);
-            }
-        }
+//        Log.d(TAG, "moveUp: " + logString.toString());
     }
 }
