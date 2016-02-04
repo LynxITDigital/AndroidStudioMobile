@@ -1,6 +1,5 @@
 package com.example.blah.mobilestudio.Resizer;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,19 @@ import android.view.ViewGroup;
  */
 public class LocationState {
     String TAG = LocationState.class.getSimpleName();
-    View firstView, secondView, thirdView;
-    ViewGroup.LayoutParams firstParams, secondParams, thirdParams;
+    View firstView, thirdView;
+    ViewGroup.LayoutParams firstParams, thirdParams;
     boolean isHorizontal;
     Coordinate previousCoordinate;
-    MovementDirection direction = null;
 
-    public LocationState(View firstView, View secondView, View thirdView, boolean isHorizontal, MotionEvent event) {
+    public LocationState(View firstView, View thirdView, boolean isHorizontal, MotionEvent event) {
         this.firstView = firstView;
-        this.secondView = secondView;
         this.thirdView = thirdView;
 
         firstParams = firstView.getLayoutParams();
-        secondParams = secondView.getLayoutParams();
         thirdParams = thirdView.getLayoutParams();
 
-        previousCoordinate = new Coordinate(event.getX(), event.getY());
+        previousCoordinate = new Coordinate(event.getRawX(), event.getRawY());
 
         this.isHorizontal = isHorizontal;
     }
@@ -49,64 +45,31 @@ public class LocationState {
             logString.append(" prev x ")
                     .append(previousCoordinate.x)
                     .append(" x ")
-                    .append(motionEvent.getX());
+                    .append(motionEvent.getRawX());
 
-            amount = previousCoordinate.x - motionEvent.getX();
-            moveHorizontally(amount);
+            amount = previousCoordinate.x - motionEvent.getRawX();
+
+            firstParams.width = Math.round(firstParams.width - amount);
+            thirdParams.width = Math.round(thirdParams.width + amount);
         } else {
-            amount = previousCoordinate.y - motionEvent.getY();
-            moveVertically(amount);
-
             logString.append(" prev y ")
                     .append(previousCoordinate.y)
                     .append(" y ")
-                    .append(motionEvent.getY())
-                    .append(" direction vertically "));
+                    .append(motionEvent.getRawY())
+                    .append(" direction vertically ");
+
+            amount = previousCoordinate.y - motionEvent.getRawY();
+
+            firstParams.height = Math.round(firstParams.height + amount);
+            thirdParams.height = Math.round(thirdParams.height - amount);
         }
 
-                .append(" amount ")
+        firstView.setLayoutParams(firstParams);
+        thirdView.setLayoutParams(thirdParams);
+
+        logString.append(" amount ")
                 .append(amount);
-        Log.d(TAG, "move: " + logString.toString());
-        previousCoordinate = new Coordinate(motionEvent.getX(), motionEvent.getY());
-
-    }
-    private void moveHorizontally(float offset) {
-        StringBuilder logString = new StringBuilder();
-            logString.append(" firstParams.width ")
-                    .append(firstParams.width)
-                    .append(" secondView.getX() ")
-                    .append(secondView.getX())
-                    .append(" thirdParams.width ")
-                    .append(thirdParams.width)
-                    .append(" firstView.getWidth() ")
-                    .append(firstView.getWidth())
-                    .append(" thirdView.getWidth() ")
-                    .append(thirdView.getWidth());
-
-        firstParams.width = Math.round(firstParams.width - offset);
-        thirdParams.width = Math.round(thirdParams.width + offset);
-        firstView.requestLayout();
-
-//        Log.d(TAG, "moveLeft: " + logString.toString());
-    }
-
-    private void moveVertically(float offset) {
-        StringBuilder logString = new StringBuilder();
-        logString.append(" firstParams.height ")
-                .append(firstParams.height)
-                .append(" secondView.getY() ")
-                .append(secondView.getY())
-                .append(" thirdParams.height ")
-                .append(thirdParams.height)
-                .append(" firstView.getHeight() ")
-                .append(firstView.getHeight())
-                .append(" thirdView.getWidth() ")
-                .append(thirdView.getHeight());
-
-        firstParams.height = Math.round(firstParams.height + offset);
-        thirdParams.height = Math.round(thirdParams.height - offset);
-        firstView.requestLayout();
-
-//        Log.d(TAG, "moveUp: " + logString.toString());
+//        Log.d(TAG, "move: " + logString.toString());
+        previousCoordinate = new Coordinate(motionEvent.getRawX(), motionEvent.getRawY());
     }
 }

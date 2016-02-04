@@ -61,7 +61,7 @@ public class HorizontalResizerFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
-                    locationState = new LocationState(leftView, middleView, rightView, true, event);
+                    locationState = new LocationState(leftView, rightView, true, event);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
