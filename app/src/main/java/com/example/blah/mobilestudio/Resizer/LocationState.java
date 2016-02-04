@@ -60,8 +60,8 @@ public class LocationState {
 
             amount = previousCoordinate.y - motionEvent.getRawY();
 
-            firstParams.height = Math.round(firstParams.height + amount);
-            thirdParams.height = Math.round(thirdParams.height - amount);
+            firstParams.height = Math.round(firstParams.height - amount);
+            thirdParams.height = Math.round(thirdParams.height + amount);
         }
 
         firstView.setLayoutParams(firstParams);

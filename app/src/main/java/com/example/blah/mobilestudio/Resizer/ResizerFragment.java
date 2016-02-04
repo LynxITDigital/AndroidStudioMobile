@@ -14,44 +14,48 @@ import com.example.blah.mobilestudio.R;
 /**
  * Created by mattgale on 2/02/2016.
  */
-public class HorizontalResizerFragment extends Fragment {
+public class ResizerFragment extends Fragment {
 
-    String TAG = HorizontalResizerFragment.class.getSimpleName();
+    String TAG = ResizerFragment.class.getSimpleName();
     private View leftView, middleView, rightView, resizerView;
+    private boolean isHorizontal;
 
-    public static final String LEFTVIEW_BUNDLE_KEY = "LEFTVIEW";
-    public static final String MIDDLEVIEW_BUNDLE_KEY = "MIDDLEVIEW";
-    public static final String RIGHTVIEW_BUNDLE_KEY = "RIGHTVIEW";
+    public static final String FIRST_VIEW_BUNDLE_KEY = "LEFTVIEW";
+    public static final String THIRD_VIEW_BUNDLE_KEY = "RIGHTVIEW";
+
+    public static final String IS_HORIZONTAL = "IS_HORIZONTAL";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.horizontal_resizer, container, false);
-        resizerView = rootView.findViewById(R.id.resizer_view);
-
-        resizerView.setOnTouchListener(touchListener);
-
         Activity activity = getActivity();
 
         Bundle bundle = getArguments();
-        int leftKey =  bundle.getInt(LEFTVIEW_BUNDLE_KEY, 0);
-        int middleKey = bundle.getInt(MIDDLEVIEW_BUNDLE_KEY, 0);
-        int rightKey = bundle.getInt(RIGHTVIEW_BUNDLE_KEY, 0);
-        if(leftKey == 0 || middleKey == 0 || rightKey == 0) {
+        isHorizontal = bundle.getBoolean(IS_HORIZONTAL);
+
+        View rootView;
+        if(isHorizontal) {
+            rootView = inflater.inflate(R.layout.horizontal_resizer, container, false);
+            resizerView = rootView.findViewById(R.id.resizer_horizontal_view);
+        } else {
+            rootView = inflater.inflate(R.layout.vertical_resizer, container, false);
+            resizerView = rootView.findViewById(R.id.resizer_vertical_view);
+        }
+
+        int firstKey =  bundle.getInt(FIRST_VIEW_BUNDLE_KEY, 0);
+        int thirdKey = bundle.getInt(THIRD_VIEW_BUNDLE_KEY, 0);
+
+        if(firstKey == 0 || thirdKey == 0) {
             return rootView;
         }
 
-        leftView = activity.findViewById(leftKey);
-        middleView = activity.findViewById(middleKey);
-        rightView = activity.findViewById(rightKey);
-        return rootView;
-    }
+        resizerView.setOnTouchListener(touchListener);
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        leftView = activity.findViewById(firstKey);
+        rightView = activity.findViewById(thirdKey);
+        return rootView;
     }
 
     LocationState locationState = null;
@@ -61,7 +65,7 @@ public class HorizontalResizerFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
-                    locationState = new LocationState(leftView, rightView, true, event);
+                    locationState = new LocationState(leftView, rightView, isHorizontal, event);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {

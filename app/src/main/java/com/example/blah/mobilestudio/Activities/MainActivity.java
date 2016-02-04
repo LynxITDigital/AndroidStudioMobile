@@ -20,7 +20,7 @@ import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
-import com.example.blah.mobilestudio.Resizer.HorizontalResizerFragment;
+import com.example.blah.mobilestudio.Resizer.ResizerFragment;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
-    private HorizontalResizerFragment horizontalResizerFragment;
+    private ResizerFragment horizontalResizerFragment;;
+    private ResizerFragment veritcalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
 
@@ -68,12 +69,19 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the file fragment
         fileFragment = new FileFragment();
-        horizontalResizerFragment = new HorizontalResizerFragment();
+        horizontalResizerFragment = new ResizerFragment();
         Bundle horizontalResizerBundle = new Bundle();
-        horizontalResizerBundle.putInt(HorizontalResizerFragment.LEFTVIEW_BUNDLE_KEY, R.id.explorer_fragment);
-        horizontalResizerBundle.putInt(HorizontalResizerFragment.MIDDLEVIEW_BUNDLE_KEY, R.id.explorer_content_resizer_fragment);
-        horizontalResizerBundle.putInt(HorizontalResizerFragment.RIGHTVIEW_BUNDLE_KEY, R.id.content_fragment);
+        horizontalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.explorer_fragment);
+        horizontalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.content_fragment);
+        horizontalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, true);
         horizontalResizerFragment.setArguments(horizontalResizerBundle);
+
+        veritcalResizerFragment = new ResizerFragment();
+        Bundle veritcalResizerBundle = new Bundle();
+        veritcalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.top_layout);
+        veritcalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.android_monitor_outer_layout);
+        veritcalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, false);
+        veritcalResizerFragment.setArguments(veritcalResizerBundle);
 
         androidMonitorFragment = new AndroidMonitorFragment();
 
@@ -87,10 +95,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.explorer_content_resizer_fragment, horizontalResizerFragment)
+                .add(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
                 .add(R.id.explorer_fragment, folderStructureFragment)
                 .add(R.id.content_fragment, fileFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
+                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
                 .commit();
 
         // Initialise the root and current folder values
@@ -254,10 +263,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             View outerLayout;
 
             View heirarchyFrameLayout;
-            View resizerFrameLayout;
+            View horizontalResizer;
             View contentFrameLayout;
 
             View topLayout;
+            View verticalResizer;
             View androidMonitorLayout;
 
             @Override
@@ -266,10 +276,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 outerLayout = findViewById(R.id.screen_layout);
 
                 heirarchyFrameLayout = findViewById(R.id.explorer_fragment);
-                resizerFrameLayout = findViewById(R.id.explorer_content_resizer_fragment);
+                horizontalResizer = findViewById(R.id.explorer_content_resizer_horizontal_fragment);
                 contentFrameLayout = findViewById(R.id.content_fragment);
 
                 topLayout = findViewById(R.id.top_layout);
+                verticalResizer = findViewById(R.id.top_monitor_resizer_vertical_fragment);
                 androidMonitorLayout = findViewById(R.id.android_monitor_outer_layout);
 
                 widthChanges();
@@ -280,16 +291,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
 
             void widthChanges() {
-                //known information - the outerlayout is the width of the screen.
+                //known information
                 float thirdWidth = ((float) outerLayout.getWidth()) / 3f;
-
-                //known information - the resizerFrameLayout is the width of the resizer view.
-                float halfOfResizerView = ((float) resizerFrameLayout.getWidth()) / 2f;
+                float halfOfResizerView = ((float) horizontalResizer.getWidth()) / 2f;
 
                 //change the width of the hierarchy view to be before the resizer view
-                int newBeginningOfResizer = Math.round(thirdWidth - halfOfResizerView);
-
-                heirarchyFrameLayout.getLayoutParams().width = newBeginningOfResizer;
+                heirarchyFrameLayout.getLayoutParams().width = Math.round(thirdWidth - halfOfResizerView);
 
                 //leave the resizer views width.
                 //set the width of the content view to be the space that's left.
@@ -297,17 +304,16 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
 
             void heightChanges() {
-                //known information - the outerlayout is the width of the screen.
+                //known information
                 float thirdHeight = ((float) outerLayout.getHeight()) / 3f;
+                float halfOfResizerView = ((float) verticalResizer.getHeight()) / 2f;
 
                 //change the height and y position of the top_layout to be 2/3rds of the screen.
-                int newBeginningOfAndroidMonitor = Math.round(thirdHeight);
-
-                topLayout.getLayoutParams().height = newBeginningOfAndroidMonitor * 2;
+                topLayout.getLayoutParams().height = Math.round((thirdHeight * 2) - halfOfResizerView);
 
                 //change the android monitor layout to have a y position below the top layout
                 // and change it to have a height of 1/3rd of the screen.s
-                androidMonitorLayout.getLayoutParams().height = newBeginningOfAndroidMonitor;
+                androidMonitorLayout.getLayoutParams().height = Math.round(thirdHeight - halfOfResizerView);
             }
         });
     }
