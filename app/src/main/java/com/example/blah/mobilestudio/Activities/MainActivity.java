@@ -260,10 +260,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
                 outerLayout = (LinearLayout) findViewById(R.id.screen_layout);
 
-//                heirarchyFrameLayout = folderStructureFragment.getView();
-//                resizerFrameLayout = horizontalResizerFragment.getView();
-//                contentFrameLayout = fileFragment.getView();
-
                 heirarchyFrameLayout = (FrameLayout)findViewById(R.id.explorer_fragment);
                 resizerFrameLayout = (FrameLayout)findViewById(R.id.explorer_content_resizer_fragment);
                 contentFrameLayout = (FrameLayout)findViewById(R.id.content_fragment);
@@ -280,69 +276,34 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
 
             void widthChanges() {
-
                 //known information - the outerlayout is the width of the screen.
                 float thirdWidth = ((float) outerLayout.getWidth()) / 3f;
-                Log.d(TAG, "widthChanges: outerLayout width " + outerLayout.getWidth());
-                Log.d(TAG, "widthChanges: thirdWidth " + thirdWidth);
 
                 //known information - the resizerFrameLayout is the width of the resizer view.
                 float halfOfResizerView = ((float) resizerFrameLayout.getWidth()) / 2f;
-                Log.d(TAG, "widthChanges: resizer view width " + resizerFrameLayout.getWidth());
-                Log.d(TAG, "widthChanges: half of resizer view " + halfOfResizerView);
-
-                float widthOfVerticalBreadCrumbs = verticalBreadcrumbRelativeLayout.getWidth();
-                Log.d(TAG, "widthChanges: verticalBreadcrumbFrameLayout.getWidth() " + verticalBreadcrumbRelativeLayout.getWidth());
-
 
                 //change the width of the hierarchy view to be before the resizer view
-                // and change the x position of the resizerview to be after the width of the hierarchy view
                 int newBeginningOfResizer = Math.round(thirdWidth - halfOfResizerView);
-                Log.d(TAG, "widthChanges: new beginning of resizer " + newBeginningOfResizer);
-
-//                heirarchyFrameLayout.setX(widthOfVerticalBreadCrumbs);
-//                Log.d(TAG, "widthChanges: heirarchyFrameLayout.getX() " + heirarchyFrameLayout.getX());
 
                 heirarchyFrameLayout.getLayoutParams().width = newBeginningOfResizer;
-                Log.d(TAG, "widthChanges: heirarchyFrameLayout.getLayoutParams().width " + heirarchyFrameLayout.getLayoutParams().width);
 
-//                Log.d(TAG, "widthChanges: resizerFrameLayout.getX() " + resizerFrameLayout.getX());
-//                resizerFrameLayout.setX(newBeginningOfResizer);
-//                Log.d(TAG, "widthChanges: resizerFrameLayout.getX() " + resizerFrameLayout.getX());
-//                Log.d(TAG, "widthChanges: resizerFrameLayout.getLayoutParams().width " + resizerFrameLayout.getLayoutParams().width);
-
-//
-//                //leave the resizer views width.
-//                //set the content view to be after the resizer view.
-//                //set the width of the content view to be the space that's left.
-//                contentFrameLayout.setX(newBeginningOfResizer + halfOfResizerView);
-//                Log.d(TAG, "widthChanges: contentview x " + contentFrameLayout.getX());
-//
+                //leave the resizer views width.
+                //set the width of the content view to be the space that's left.
                 contentFrameLayout.getLayoutParams().width = Math.round((thirdWidth * 2) - halfOfResizerView);
-//                Log.d(TAG, "widthChanges: contentFrameLayout.getLayoutParams().width " + contentFrameLayout.getLayoutParams().width);
             }
 
             void heightChanges() {
                 //known information - the outerlayout is the width of the screen.
                 float thirdHeight = ((float) outerLayout.getHeight()) / 3f;
-                Log.d(TAG, "heightChanges: outerLayout.getHeight() " + outerLayout.getHeight());
-                Log.d(TAG, "heightChanges: third height " + thirdHeight);
 
                 //change the height and y position of the top_layout to be 2/3rds of the screen.
                 int newBeginningOfAndroidMonitor = Math.round(thirdHeight);
-                Log.d(TAG, "heightChanges: newBeginningOfAndroidMonitor " + newBeginningOfAndroidMonitor);
 
-                Log.d(TAG, "heightChanges: toplayout y " + topLayout.getY());
                 topLayout.getLayoutParams().height = newBeginningOfAndroidMonitor * 2;
-                Log.d(TAG, "heightChanges: topLayout.getLayoutParams().height " + topLayout.getLayoutParams().height);
 
                 //change the android monitor layout to have a y position below the top layout
                 // and change it to have a height of 1/3rd of the screen.s
-//                androidMonitorLayout.setY(newBeginningOfAndroidMonitor * 2);
-                Log.d(TAG, "heightChanges: androidMonitorLayout.getY " + androidMonitorLayout.getY());
                 androidMonitorLayout.getLayoutParams().height = newBeginningOfAndroidMonitor;
-                Log.d(TAG, "heightChanges: androidMonitorLayout.getLayoutParams().height " + androidMonitorLayout.getLayoutParams().height);
-
             }
         });
     }
