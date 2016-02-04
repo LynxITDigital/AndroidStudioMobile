@@ -14,13 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <FrameLayout
-            android:id="@+id/explorer_content_resizer_fragment"
-            android:layout_width="@dimen/resizer_move_size"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/topBreadFragment"
-            android:layout_toRightOf="@+id/explorer_fragment"/>
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -31,7 +24,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <fragment
-            android:id="@id/topBreadFragment"
+            android:id="@+id/topBreadFragment"
             android:name="com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,11 +38,18 @@
             android:layout_below="@id/topBreadFragment" />
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@id/explorer_fragment"
+            android:id="@+id/explorer_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/topBreadFragment"
             android:layout_toRightOf="@id/verticalTabFragment" />
+
+        <FrameLayout
+            android:id="@+id/explorer_content_resizer_fragment"
+            android:layout_width="@dimen/resizer_move_size"
+            android:layout_height="match_parent"
+            android:layout_below="@id/topBreadFragment"
+            android:layout_toRightOf="@id/explorer_fragment"/>
 
         <FrameLayout
             android:id="@+id/content_fragment"
