@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,11 +18,11 @@ import android.view.View;
 
 import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
-import com.example.blah.mobilestudio.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.Resizer.ResizerFragment;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
+import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
@@ -58,8 +58,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setOrientation();
-
+        
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -126,6 +125,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -244,13 +252,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     }
 
-
-    public FileFragment getFileFragment() {
-        return fileFragment;
-    }
-
-    public FolderStructureFragment getFolderStructureFragment() {
-        return folderStructureFragment;
     }
 
     @Override
