@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="3"
-    tools:context=".Activities.MainActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3"
+        tools:context=".activities.MainActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:layout_height="0dp"
+            android:layout_weight="2">
 
-        <fragment
-            android:id="@+id/topBreadFragment"
-            android:name="com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <fragment
-            android:id="@+id/verticalTabFragment"
-            android:name="com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragmentVertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/topBreadFragment" />
+            <fragment
+                android:id="@+id/topBreadFragment"
+                android:name="com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar" />
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/explorer_fragment"
+            <fragment
+                android:id="@+id/verticalTabFragment"
+                android:name="com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragmentVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topBreadFragment" />
+
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/explorer_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/topBreadFragment"
+                android:layout_toRightOf="@id/verticalTabFragment" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/topBreadFragment"
-            android:layout_toRightOf="@id/verticalTabFragment" />
-    </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/very_light_grey">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/very_light_grey">
+            <fragment
+                android:id="@+id/android_monitor"
+                android:name="com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <fragment
-            android:id="@+id/android_monitor"
-            android:name="com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

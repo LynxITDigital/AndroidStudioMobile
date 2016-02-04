@@ -1,10 +1,9 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
-import com.example.blah.mobilestudio.FolderStructureFragment;
+import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -68,21 +66,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the necessary permissions for the app
         handlePermissions();
-
-        if (findViewById(R.id.explorer_fragment) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-            // Set up the explorer fragment
-            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            folderStructureFragment = new FolderStructureFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-            folderStructureFragment.setArguments(bundle);
-
-            getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-            resetBreadcrumb(filePath);
-        }
     }
 
     @Override
@@ -95,24 +78,32 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             args.putString(FileFragment.FILE_CONTENTS, path);
             fileFragment.setArguments(args);
 
+            // Two-pane display
             if (findViewById(R.id.content_fragment) != null) {
-
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_fragment, fileFragment)
                         .addToBackStack(null)
                         .commit();
             } else {
-                // Todo: should navigate to a new screen.
-//                getFragmentManager().beginTransaction()
-//                        .replace(R.id.explorer_fragment, fileFragment)
-//                        .addToBackStack(null)
-//                        .commit();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_fragment, fileFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         }
 
         if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
