@@ -1,28 +1,25 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Environment;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
-import com.example.blah.mobilestudio.FolderStructureFragment;
+import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
-
 
 import java.io.File;
 
@@ -50,16 +47,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the explorer fragment
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        folderStructureFragment = new FolderStructureFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
-        folderStructureFragment.setOnClickListener(this);
-        folderStructureFragment.setArguments(bundle);
-
-        getFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
-
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -67,12 +54,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-        // Set up the file fragment
-        fileFragment = new FileFragment();
-        //fileFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction()
-                            .add(R.id.content_fragment, fileFragment)
-                            .commit();
 
         // Initialise the root and current folder values
         if (rootFolder == null) {
@@ -91,14 +72,38 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     public void onFileSelected(String path) {
         Log.d("file-selected", path);
         File file = new File(path);
-        if(!file.isDirectory()){
-            fileFragment.setDisplayedFile(file);
+        if (!file.isDirectory()) {
+            fileFragment = new FileFragment();
+            Bundle args = new Bundle();
+            args.putString(FileFragment.FILE_CONTENTS, path);
+            fileFragment.setArguments(args);
+
+            // Two-pane display
+            if (findViewById(R.id.content_fragment) != null) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_fragment, fileFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_fragment, fileFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
 
-        if(breadFragment != null)
-        {
+        if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
