@@ -130,13 +130,13 @@ public class BreadcrumbView extends LinearLayout {
                 tv.setBackgroundResource(R.drawable.bread_item_background);
                 SetBackgroundResizable(tv);
                 ((TextView)tv).setTextColor(breadcrumbTextColor);
-                ((TextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PX, breadcrumbTextSize);
+                ((TextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PT, breadcrumbTextSize);
                 ((TextView)tv).setText(" " + this.listOfElements.get(i) + " ");
             }else{
                 // initialize the vertical breadcrumb item
                 tv = new VerticalTextView(getContext());
                 ((VerticalTextView)tv).setTextColor(breadcrumbTextColor);
-                ((VerticalTextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PX, breadcrumbTextSize);
+                ((VerticalTextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PT, breadcrumbTextSize);
                 ((VerticalTextView)tv).setText(" " + this.listOfElements.get(i) + " ");
 
                 // Set the listener for vertical items
