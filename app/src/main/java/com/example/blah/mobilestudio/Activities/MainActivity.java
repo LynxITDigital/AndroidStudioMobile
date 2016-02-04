@@ -252,8 +252,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     }
 
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
