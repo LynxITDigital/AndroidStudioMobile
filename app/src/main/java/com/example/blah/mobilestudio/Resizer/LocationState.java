@@ -1,6 +1,5 @@
 package com.example.blah.mobilestudio.Resizer;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,21 +67,28 @@ public class LocationState {
         float amount;
 
         if(isHorizontal) {
-            // prevent movement below a certain minimum amount or maximum.
-            Log.d(TAG, "move: motionEvent.getRawX() " + motionEvent.getRawX() + " region.minX " + region.minX + " region.maxX " + region.maxX);
-            if (motionEvent.getRawX() > region.minX && motionEvent.getRawX() < region.maxX ) {
-                Log.d(TAG, "move: moved left");
+            if (motionEvent.getRawX() > region.min && motionEvent.getRawX() < region.max ) {
                 amount = previousCoordinate.x - motionEvent.getRawX();
                 firstParams.width = Math.round(firstParams.width - amount);
                 thirdParams.width = Math.round(thirdParams.width + amount);
+            } else if (motionEvent.getRawX() > region.max) {
+                firstParams.width -= 1;
+                thirdParams.width += 1;
+            } else if (motionEvent.getRawX() < region.min) {
+                firstParams.width += 1;
+                thirdParams.width -= 1;
             }
         } else {
-            if (motionEvent.getRawY() > region.minY && motionEvent.getRawY() < region.maxY ) {
-//                Log.d(TAG, "move: motionEvent.getRawY() " + motionEvent.getRawY());
+            if (motionEvent.getRawY() > region.min && motionEvent.getRawY() < region.max ) {
                 amount = previousCoordinate.y - motionEvent.getRawY();
-
                 firstParams.height = Math.round(firstParams.height - amount);
                 thirdParams.height = Math.round(thirdParams.height + amount);
+            } else if (motionEvent.getRawY() > region.max) {
+                firstParams.height -= 1;
+                thirdParams.height += 1;
+            } else if (motionEvent.getRawY() < region.min) {
+                firstParams.height += 1;
+                thirdParams.height -= 1;
             }
         }
 

@@ -330,22 +330,18 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
 
             void configureVerticalResizerRegion() {
-                Log.d(TAG, "configureVerticalResizerRegion: toolbarView.getHeight() " + toolbarView.getHeight());
-                Log.d(TAG, "configureVerticalResizerRegion: outerLayout.getHeight() " + outerLayout.getHeight());
+                Log.d(TAG, "configureVerticalResizerRegion: " + (toolbarView.getHeight() + REGION_OFFSET));
+                Log.d(TAG, "configureVerticalResizerRegion: " + (outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())));
                 veritcalResizerFragment.configure(new SizableRegion(
-                    0,0,
                     toolbarView.getHeight() + REGION_OFFSET,
                     outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())
                 ));
             }
 
             void configureHorizontalResizerRegion() {
-                Log.d(TAG, "configureHorizontalResizerRegion: verticalBreadCrumbView.getWidth() " +verticalBreadCrumbView.getWidth());
-                Log.d(TAG, "configureHorizontalResizerRegion: outerLayout.getWidth() " + outerLayout.getWidth());
                 horizontalResizerFragment.configure(new SizableRegion(
                     verticalBreadCrumbView.getWidth() + REGION_OFFSET,
                     outerLayout.getWidth() - (REGION_OFFSET + verticalResizer.getHeight())
-                    ,0,0
                 ));
             }
         });
