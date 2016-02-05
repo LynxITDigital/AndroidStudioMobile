@@ -45,7 +45,6 @@ public class BreadcrumbView extends LinearLayout {
         TypedArray attributesValuesArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BreadcrumbView, 0, 0);
 
         try {
-            currentPath ="";
             isPathable = attributesValuesArray.getBoolean(R.styleable.BreadcrumbView_isPathable, true);
             orientation = attributesValuesArray.getString(R.styleable.BreadcrumbView_orientation);
             breadcrumbTextColor = attributesValuesArray.getInteger(R.styleable.BreadcrumbView_breadcrumbTextColor, 0);

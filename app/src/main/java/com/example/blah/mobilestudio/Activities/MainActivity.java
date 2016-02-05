@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
         }
 
+        breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
         if (breadFragment != null) {
             breadFragment.currentPath = path;
             breadFragment.onResume();
