@@ -20,6 +20,7 @@ import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.Resizer.ResizerFragment;
+import com.example.blah.mobilestudio.Resizer.SizableRegion;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
@@ -269,6 +270,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             View verticalResizer;
             View androidMonitorLayout;
 
+            View toolbarView;
+
+            View verticalBreadCrumbView;
+
+            final float REGION_OFFSET = 100f;
+
             @Override
             public void run() {
 
@@ -282,8 +289,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 verticalResizer = findViewById(R.id.top_monitor_resizer_vertical_fragment);
                 androidMonitorLayout = findViewById(R.id.android_monitor_outer_layout);
 
+                toolbarView = findViewById(R.id.toolbar);
+
+                verticalBreadCrumbView = findViewById(R.id.verticalTabFragment);
+
                 widthChanges();
                 heightChanges();
+
+                configureVerticalResizerRegion();
+                configureHorizontalResizerRegion();
 
                 //layout views again
                 outerLayout.requestLayout();
@@ -313,6 +327,26 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 //change the android monitor layout to have a y position below the top layout
                 // and change it to have a height of 1/3rd of the screen.s
                 androidMonitorLayout.getLayoutParams().height = Math.round(thirdHeight - halfOfResizerView);
+            }
+
+            void configureVerticalResizerRegion() {
+                Log.d(TAG, "configureVerticalResizerRegion: toolbarView.getHeight() " + toolbarView.getHeight());
+                Log.d(TAG, "configureVerticalResizerRegion: outerLayout.getHeight() " + outerLayout.getHeight());
+                veritcalResizerFragment.configure(new SizableRegion(
+                    0,0,
+                    toolbarView.getHeight() + REGION_OFFSET,
+                    outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())
+                ));
+            }
+
+            void configureHorizontalResizerRegion() {
+                Log.d(TAG, "configureHorizontalResizerRegion: verticalBreadCrumbView.getWidth() " +verticalBreadCrumbView.getWidth());
+                Log.d(TAG, "configureHorizontalResizerRegion: outerLayout.getWidth() " + outerLayout.getWidth());
+                horizontalResizerFragment.configure(new SizableRegion(
+                    verticalBreadCrumbView.getWidth() + REGION_OFFSET,
+                    outerLayout.getWidth() - (REGION_OFFSET + verticalResizer.getHeight())
+                    ,0,0
+                ));
             }
         });
     }

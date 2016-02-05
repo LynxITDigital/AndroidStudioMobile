@@ -19,6 +19,7 @@ public class ResizerFragment extends Fragment {
     String TAG = ResizerFragment.class.getSimpleName();
     private View leftView, middleView, rightView, resizerView;
     private boolean isHorizontal;
+    private SizableRegion sizableRegion;
 
     public static final String FIRST_VIEW_BUNDLE_KEY = "LEFTVIEW";
     public static final String THIRD_VIEW_BUNDLE_KEY = "RIGHTVIEW";
@@ -44,7 +45,7 @@ public class ResizerFragment extends Fragment {
             resizerView = rootView.findViewById(R.id.resizer_vertical_view);
         }
 
-        int firstKey =  bundle.getInt(FIRST_VIEW_BUNDLE_KEY, 0);
+        int firstKey = bundle.getInt(FIRST_VIEW_BUNDLE_KEY, 0);
         int thirdKey = bundle.getInt(THIRD_VIEW_BUNDLE_KEY, 0);
 
         if(firstKey == 0 || thirdKey == 0) {
@@ -55,7 +56,12 @@ public class ResizerFragment extends Fragment {
 
         leftView = activity.findViewById(firstKey);
         rightView = activity.findViewById(thirdKey);
+
         return rootView;
+    }
+
+    public void configure(SizableRegion region) {
+        sizableRegion = region;
     }
 
     LocationState locationState = null;
@@ -65,7 +71,7 @@ public class ResizerFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN: {
-                    locationState = new LocationState(leftView, rightView, isHorizontal, event);
+                    locationState = new LocationState(sizableRegion, leftView, rightView, isHorizontal, event);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
