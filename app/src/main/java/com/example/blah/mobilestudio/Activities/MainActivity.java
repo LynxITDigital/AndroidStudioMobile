@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     public static final int PICK_DIRECTORY_REQUEST = 1;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
+    // The smallest/largest amount of pixels that a view can be resized to.
+    private static final float REGION_OFFSET = 100f;
 
     private String currentFolder;
     private String rootFolder;
@@ -69,19 +71,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
         // Set up the file fragment
         fileFragment = new FileFragment();
-        horizontalResizerFragment = new ResizerFragment();
-        Bundle horizontalResizerBundle = new Bundle();
-        horizontalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.explorer_fragment);
-        horizontalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.content_fragment);
-        horizontalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, true);
-        horizontalResizerFragment.setArguments(horizontalResizerBundle);
-
-        veritcalResizerFragment = new ResizerFragment();
-        Bundle veritcalResizerBundle = new Bundle();
-        veritcalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.top_layout);
-        veritcalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.android_monitor_outer_layout);
-        veritcalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, false);
-        veritcalResizerFragment.setArguments(veritcalResizerBundle);
 
         androidMonitorFragment = new AndroidMonitorFragment();
 
@@ -92,14 +81,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setArguments(bundle);
 
         resetBreadcrumb(filePath);
-
+        setResizers(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         //fileFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
                 .add(R.id.explorer_fragment, folderStructureFragment)
                 .add(R.id.content_fragment, fileFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
-                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
                 .commit();
 
         // Initialise the root and current folder values
@@ -253,11 +240,40 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    // Sets up the layout for the main activity
+    private void setResizers(final Boolean isLandscape){
         View outerLayout = findViewById(R.id.screen_layout).getRootView();
+
+        // Set up the resizer fragments
+        // need the horizontal fragment in landscape
+
+        if(isLandscape){
+            // Do not create the horizontal resizer fragment if landscape
+            horizontalResizerFragment = new ResizerFragment();
+            Bundle horizontalResizerBundle = new Bundle();
+            horizontalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.explorer_fragment);
+            horizontalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.content_fragment);
+            horizontalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, true);
+            horizontalResizerFragment.setArguments(horizontalResizerBundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
+                    .commit();
+        }
+
+        // Need vertical in both portrait and landscape
+        veritcalResizerFragment = new ResizerFragment();
+        Bundle veritcalResizerBundle = new Bundle();
+        veritcalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.top_layout);
+        veritcalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.android_monitor_outer_layout);
+        veritcalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, false);
+        veritcalResizerFragment.setArguments(veritcalResizerBundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
+                .commit();
+
+
+
         outerLayout.post(new Runnable() {
 
             View outerLayout;
@@ -273,8 +289,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             View toolbarView;
 
             View verticalBreadCrumbView;
-
-            final float REGION_OFFSET = 100f;
 
             @Override
             public void run() {
@@ -296,8 +310,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 widthChanges();
                 heightChanges();
 
+
+                if (isLandscape) {
+                    configureHorizontalResizerRegion();
+                }
                 configureVerticalResizerRegion();
-                configureHorizontalResizerRegion();
+
 
                 //layout views again
                 outerLayout.requestLayout();
@@ -333,19 +351,20 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 Log.d(TAG, "configureVerticalResizerRegion: " + (toolbarView.getHeight() + REGION_OFFSET));
                 Log.d(TAG, "configureVerticalResizerRegion: " + (outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())));
                 veritcalResizerFragment.configure(new SizableRegion(
-                    toolbarView.getHeight() + REGION_OFFSET,
-                    outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())
+                        toolbarView.getHeight() + REGION_OFFSET,
+                        outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())
                 ));
             }
 
             void configureHorizontalResizerRegion() {
                 horizontalResizerFragment.configure(new SizableRegion(
-                    verticalBreadCrumbView.getWidth() + REGION_OFFSET,
-                    outerLayout.getWidth() - (REGION_OFFSET + verticalResizer.getHeight())
+                        verticalBreadCrumbView.getWidth() + REGION_OFFSET,
+                        outerLayout.getWidth() - (REGION_OFFSET + verticalResizer.getHeight())
                 ));
             }
         });
     }
+
 
     public void setOrientation() {
         if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
