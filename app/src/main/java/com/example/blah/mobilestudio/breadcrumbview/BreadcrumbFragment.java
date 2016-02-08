@@ -40,6 +40,8 @@ public class BreadcrumbFragment extends Fragment {
         if (savedInstanceState != null) {
             currentPath = savedInstanceState.getString("currentPath");
             breadCrumb.rootPath = savedInstanceState.getString("rootPath");
+            breadCrumb.highlightedItem = savedInstanceState.getString("highlightedItem");
+            breadCrumb.highlightedIndex= savedInstanceState.getInt("highlightedIndex");
         }
         return v;
     }
@@ -71,6 +73,11 @@ public class BreadcrumbFragment extends Fragment {
         ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
         for (int i = 0; i < items.size() - 1; i++)
             breadCrumb.rootPath += "/" + items.get(i);
+    }
+
+    public void highlightSelectedItem(String item, int inx){
+        breadCrumb.highlightedItem = item;
+        breadCrumb.highlightedIndex = inx;
     }
 
     @Override
@@ -115,5 +122,7 @@ public class BreadcrumbFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString("currentPath", currentPath);
         outState.putString("rootPath", breadCrumb.rootPath);
+        outState.putString("highlightedItem", breadCrumb.highlightedItem);
+        outState.putInt("highlightedIndex", breadCrumb.highlightedIndex);
     }
 }
