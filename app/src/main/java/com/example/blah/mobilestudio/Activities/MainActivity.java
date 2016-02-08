@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -214,14 +214,30 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Call commitAllowingStateLoss() instead of commit().
+     * Please refer to http://stackoverflow.com/questions/7575921/illegalstateexception
+     * -can-not-perform-this-action-after-onsaveinstancestate-wit
+     */
     private void openFile(String filePath) {
-        FolderStructureFragment folderStructureFragment = new FolderStructureFragment();
-        Bundle b = new Bundle();
-        b.putString(FolderStructureFragment.FILE_PATH, filePath);
-        folderStructureFragment.setOnClickListener(this);
-        folderStructureFragment.setArguments(b);
+        FolderStructureFragment folderStructureFragment = (FolderStructureFragment) getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commit();
+        if (folderStructureFragment != null) {
+            Bundle b = folderStructureFragment.getArguments();
+            b.putString(FolderStructureFragment.FILE_PATH, filePath);
+            folderStructureFragment.setOnClickListener(this);
+            getSupportFragmentManager().beginTransaction()
+                    .detach(folderStructureFragment)
+                    .attach(folderStructureFragment)
+                    .commitAllowingStateLoss();
+        } else {
+            folderStructureFragment = new FolderStructureFragment();
+            Bundle b = new Bundle();
+            b.putString(FolderStructureFragment.FILE_PATH, filePath);
+            folderStructureFragment.setOnClickListener(this);
+            folderStructureFragment.setArguments(b);
+            getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commitAllowingStateLoss();;
+        }
     }
 
     private void highlightFIle(String filePath) {
@@ -233,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         //Horizontal Breadcrumb reset
         breadFragment = (BreadcrumbFragment) getSupportFragmentManager().findFragmentById(R.id.topBreadFragment);
         breadFragment.currentPath = filePath;
+
         breadFragment.setOnClickListener(this);
         getSupportFragmentManager()
                 .beginTransaction().

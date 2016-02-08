@@ -3,16 +3,13 @@ package com.example.blah.mobilestudio.fileTreeView;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.example.blah.mobilestudio.R;
-import com.example.blah.mobilestudio.fileTreeView.FileNodeViewHolder;
-import com.example.blah.mobilestudio.fileTreeView.FileTreeView;
 import com.example.blah.mobilestudio.treeview.TreeNode;
 
 import java.io.File;
@@ -72,21 +69,8 @@ public class FolderStructureFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (context instanceof Activity) {
-                doAttach((Activity) context);
-            }
-        }
+        doAttach((Activity) context);
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            doAttach(activity);
-        }
-    }
-
 
     private void doAttach(Activity activity) {
         try {
@@ -97,11 +81,16 @@ public class FolderStructureFragment extends Fragment {
         }
     }
 
+    /**
+     * Call super.onSaveInstanceState() in the end.
+     * Please refer to http://stackoverflow.com/questions/7575921/illegalstateexception
+     * -can-not-perform-this-action-after-onsaveinstancestate-wit
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putString("tState", tView.getSaveState());
         outState.putString("selectedFilePath", tView.getSelectedFilePath());
+        super.onSaveInstanceState(outState);
     }
 
     /**

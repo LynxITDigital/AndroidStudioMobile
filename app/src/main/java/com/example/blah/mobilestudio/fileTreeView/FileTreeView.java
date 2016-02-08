@@ -3,7 +3,6 @@ package com.example.blah.mobilestudio.fileTreeView;
 import android.content.Context;
 import android.graphics.Color;
 
-
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.treeview.AndroidTreeView;
 import com.example.blah.mobilestudio.treeview.TreeNode;
@@ -124,12 +123,15 @@ public class FileTreeView extends AndroidTreeView {
         TreeNodeWrapperView view;
         if (this.highlightedNode != null) {
             view = (TreeNodeWrapperView) this.highlightedNode.getViewHolder().getView();
-            int color = view.getNodeContainer().getDrawingCacheBackgroundColor();
-            view.getNodeContainer().setBackgroundColor(color);
+            view.getNodeContainer().setBackgroundColor(Color.TRANSPARENT);
         }
         this.highlightedNode = highlightedNode;
         view = (TreeNodeWrapperView) this.highlightedNode.getViewHolder().getView();
         view.getNodeContainer().setBackgroundColor(Color.GREEN);
+    }
+
+    public TreeNode getHighlightedNode() {
+        return highlightedNode;
     }
 
     public String getSelectedFilePath() {
@@ -138,5 +140,9 @@ public class FileTreeView extends AndroidTreeView {
 
     public void setSelectedFilePath(String selectedFilePath) {
         this.selectedFilePath = selectedFilePath;
+    }
+
+    public TreeNode getRoot() {
+        return mRoot;
     }
 }

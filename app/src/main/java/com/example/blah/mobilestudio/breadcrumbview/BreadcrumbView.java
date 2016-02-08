@@ -5,9 +5,12 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.CalendarContract;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -31,7 +34,7 @@ public class BreadcrumbView extends LinearLayout {
     Integer breadcrumbTextColor;
     Integer breadcrumbTextSize;
     Integer breadcrumbBgColor;
-    private static int SPACER_WIDTH = 3;
+    private static int SPACER_WIDTH = 5;
     OnItemSelectedListener mListener;
 
     public BreadcrumbView (Context context, AttributeSet attrs){
@@ -58,7 +61,7 @@ public class BreadcrumbView extends LinearLayout {
         mListener  = onItemSelectedListener;
         final ArrayList<String> elements = this.listOfElements;
 
-        // Itereates on the child nodes of breadcrumb
+        // Iterates on the child nodes of breadcrumb
         for(int i = 0; i<this.getChildCount();i++){
             View v = this.getChildAt(i);
             if(v != null && v.getTag() != null && v.getTag().toString().startsWith("brItem")) {
@@ -80,12 +83,15 @@ public class BreadcrumbView extends LinearLayout {
                                 View curV = p.getChildAt(i);
                                 if (curV != null && curV.getTag() != null && curV.getTag().toString().startsWith("brItem")) {
                                     // reset the visual style of all breadcrumb items to "Not Selected"
-                                    curV.setBackgroundColor(breadcrumbBgColor);
+                                    curV.setBackgroundResource(R.drawable.bread_item_background);
+                                    SetBackgroundResizable(curV);
                                 }
                             }
                             currentPath = "/" + relativePathToCurrentCell;
                             // set the visual style of selected breadcrumb item to "Selected"
-                            v.setBackgroundColor(Color.BLUE);
+                            v.setBackgroundResource(R.drawable.bread_item_background);
+                            SetBackgroundResizable(v);
+                            v.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.DARKEN);
                         }
                         if (mListener != null)
                             mListener.onBreadItemSelected(currentPath);
@@ -119,15 +125,20 @@ public class BreadcrumbView extends LinearLayout {
         for (int i=0;i<this.listOfElements.size();i++){
             final View tv;
             if(orientation.equals("horizontal")) {
+                // initialize the breadcrumb item
                 tv = new TextView(getContext());
+                tv.setBackgroundResource(R.drawable.bread_item_background);
+                SetBackgroundResizable(tv);
                 ((TextView)tv).setTextColor(breadcrumbTextColor);
-                ((TextView)tv).setTextSize(breadcrumbTextSize);
+                ((TextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PX, breadcrumbTextSize);
                 ((TextView)tv).setText(" " + this.listOfElements.get(i) + " ");
             }else{
+                // initialize the vertical breadcrumb item
                 tv = new VerticalTextView(getContext());
                 ((VerticalTextView)tv).setTextColor(breadcrumbTextColor);
-                ((VerticalTextView)tv).setTextSize(breadcrumbTextSize);
+                ((VerticalTextView)tv).setTextSize(TypedValue.COMPLEX_UNIT_PX, breadcrumbTextSize);
                 ((VerticalTextView)tv).setText(" " + this.listOfElements.get(i) + " ");
+
                 // Set the listener for vertical items
                 tv.setOnClickListener(new OnClickListener() {
                     @Override
@@ -139,11 +150,18 @@ public class BreadcrumbView extends LinearLayout {
 
             }
             tv.setTag("brItem" + String.valueOf(i));
+
+            //Set the visual style of the current folder element as selected
             if(i == this.listOfElements.size() - 1 && isPathable){
-                tv.setBackgroundColor(Color.BLUE);
+                tv.setBackgroundResource(R.drawable.bread_item_background);
+                SetBackgroundResizable(tv);
+                tv.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.DARKEN);
             }
+
+            // Add the item to the breadcrumb
             breadRoot.addView(tv);
 
+            // Create the spacer between breadcrumb items
             if(i != this.listOfElements.size() - 1)
             {
                 View spacerView = new View(getContext());
@@ -157,6 +175,24 @@ public class BreadcrumbView extends LinearLayout {
             }
         }
 
+    }
+
+    // This function allows the bacground image resizes based on the content size
+    public void SetBackgroundResizable(View tv) {
+        BitmapDrawable background = (BitmapDrawable) tv.getBackground(); // assuming you have bg_tile as background.
+        BitmapDrawable newBackground = new BitmapDrawable(background.getBitmap()) {
+            @Override
+            public int getMinimumWidth() {
+                return 0;
+            }
+
+            @Override
+            public int getMinimumHeight() {
+                return 0;
+            }
+        };
+        newBackground.setTileModeXY(background.getTileModeX(), background.getTileModeY());
+        tv.setBackgroundDrawable(newBackground);
     }
 
 }
