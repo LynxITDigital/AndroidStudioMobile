@@ -19,13 +19,10 @@ import com.example.blah.mobilestudio.R;
  * Created by alit on 25/01/2016.
  */
 public class BreadcrumbFragment extends Fragment {
-
-    public ArrayList<String> breadcrumbItems = new ArrayList<>();
     public String currentPath = "";
     OnItemSelectedListener mListener;
     View v;
-    BreadcrumbView breadCrumb;
-
+    public BreadcrumbView breadCrumb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +37,8 @@ public class BreadcrumbFragment extends Fragment {
         if (savedInstanceState != null) {
             currentPath = savedInstanceState.getString("currentPath");
             breadCrumb.rootPath = savedInstanceState.getString("rootPath");
+            breadCrumb.highlightedItem = savedInstanceState.getString("highlightedItem");
+            breadCrumb.highlightedIndex = savedInstanceState.getInt("highlightedIndex");
         }
         return v;
     }
@@ -48,8 +47,8 @@ public class BreadcrumbFragment extends Fragment {
     public void onStart() {
         super.onStart();
         breadCrumb = (BreadcrumbView) v.findViewById(R.id.bread_bar);
-        if (currentPath.length() > 0 && breadCrumb.rootPath .length() > 0) {
-            CalculatePathAndSetTheListener(breadCrumb, currentPath);
+        if (currentPath.length() > 0 && breadCrumb.rootPath.length() > 0) {
+            calculatePathAndSetTheListener(breadCrumb, currentPath);
         }
     }
 
@@ -57,7 +56,7 @@ public class BreadcrumbFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (currentPath.length() > 0) {
-            CalculatePathAndSetTheListener(breadCrumb, currentPath);
+            calculatePathAndSetTheListener(breadCrumb, currentPath);
         }
     }
 
@@ -71,6 +70,11 @@ public class BreadcrumbFragment extends Fragment {
         ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
         for (int i = 0; i < items.size() - 1; i++)
             breadCrumb.rootPath += "/" + items.get(i);
+    }
+
+    public void highlightSelectedItem(String item, int inx) {
+        breadCrumb.highlightedItem = item;
+        breadCrumb.highlightedIndex = inx;
     }
 
     @Override
@@ -100,7 +104,7 @@ public class BreadcrumbFragment extends Fragment {
         }
     }
 
-    private void CalculatePathAndSetTheListener(BreadcrumbView breadCrumb, String currentPath){
+    public void calculatePathAndSetTheListener(BreadcrumbView breadCrumb, String currentPath) {
         // Remove the root folders path from the beginning of the selected path
         currentPath = currentPath.replace(breadCrumb.rootPath, "");
         // Retrive the sequence of the remaining folders in the path
@@ -115,5 +119,7 @@ public class BreadcrumbFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString("currentPath", currentPath);
         outState.putString("rootPath", breadCrumb.rootPath);
+        outState.putString("highlightedItem", breadCrumb.highlightedItem);
+        outState.putInt("highlightedIndex", breadCrumb.highlightedIndex);
     }
 }
