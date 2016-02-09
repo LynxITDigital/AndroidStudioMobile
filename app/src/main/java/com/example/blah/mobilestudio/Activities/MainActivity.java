@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio.activities;
+package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.blah.mobilestudio.Activities.DisplayFileActivity;
 import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.R;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
 
+    // The orientation of the screen
+    private boolean isLandscape;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +85,14 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setArguments(bundle);
 
         resetBreadcrumb(filePath);
-        setResizers(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        setResizers();
         //fileFragment.setArguments(getIntent().getExtras());
+        // Fragments common to both kinds of layouts
         getSupportFragmentManager().beginTransaction()
+                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
                 .add(R.id.explorer_fragment, folderStructureFragment)
-                .add(R.id.content_fragment, fileFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
                 .commit();
 
@@ -107,7 +114,15 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         Log.d("file-selected", path);
         File file = new File(path);
         if (!file.isDirectory()) {
-            fileFragment.setDisplayedFile(new File(path));
+            // If in portrait mode, start a new activity, displaying the file
+            if(!isLandscape){
+                Intent i = new Intent(this, DisplayFileActivity.class);
+                i.putExtra(DisplayFileActivity.FILE_NAME, path);
+                startActivity(i);
+            } else {
+                fileFragment.setDisplayedFile(new File(path));
+            }
+
         }
 
         if (breadFragment != null) {
@@ -258,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     }
 
     // Sets up the layout for the main activity
-    private void setResizers(final Boolean isLandscape){
+    private void setResizers(){
         View outerLayout = findViewById(R.id.screen_layout).getRootView();
 
         // Set up the resizer fragments
@@ -274,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             horizontalResizerFragment.setArguments(horizontalResizerBundle);
 
             getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_fragment, fileFragment)
                     .add(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
                     .commit();
         }
@@ -286,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         veritcalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, false);
         veritcalResizerFragment.setArguments(veritcalResizerBundle);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
+
                 .commit();
 
 
@@ -313,8 +329,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 outerLayout = findViewById(R.id.screen_layout);
 
                 heirarchyFrameLayout = findViewById(R.id.explorer_fragment);
-                horizontalResizer = findViewById(R.id.explorer_content_resizer_horizontal_fragment);
-                contentFrameLayout = findViewById(R.id.content_fragment);
+
 
                 topLayout = findViewById(R.id.top_layout);
                 verticalResizer = findViewById(R.id.top_monitor_resizer_vertical_fragment);
@@ -323,14 +338,16 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 toolbarView = findViewById(R.id.toolbar);
 
                 verticalBreadCrumbView = findViewById(R.id.verticalTabFragment);
-
-                widthChanges();
-                heightChanges();
-
+                horizontalResizer = findViewById(R.id.explorer_content_resizer_horizontal_fragment);
 
                 if (isLandscape) {
+
+                    contentFrameLayout = findViewById(R.id.content_fragment);
+                    widthChanges();
                     configureHorizontalResizerRegion();
                 }
+
+                heightChanges();
                 configureVerticalResizerRegion();
 
 
@@ -365,8 +382,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
 
             void configureVerticalResizerRegion() {
-                Log.d(TAG, "configureVerticalResizerRegion: " + (toolbarView.getHeight() + REGION_OFFSET));
-                Log.d(TAG, "configureVerticalResizerRegion: " + (outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())));
+
                 veritcalResizerFragment.configure(new SizableRegion(
                         toolbarView.getHeight() + REGION_OFFSET,
                         outerLayout.getHeight() - (REGION_OFFSET + horizontalResizer.getWidth())

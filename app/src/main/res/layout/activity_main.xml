@@ -50,14 +50,6 @@
             android:layout_below="@id/topBreadFragment"
             android:layout_toRightOf="@id/explorer_fragment"/>
 
-        <FrameLayout
-            android:id="@+id/content_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/topBreadFragment"
-            android:layout_toRightOf="@id/explorer_content_resizer_horizontal_fragment"
-            android:layout_toEndOf="@id/explorer_content_resizer_horizontal_fragment" />
-
     </RelativeLayout>
 
     <FrameLayout

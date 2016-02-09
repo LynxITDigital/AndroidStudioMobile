@@ -1,6 +1,7 @@
 package com.example.blah.mobilestudio.FileViewer;
 
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,6 +46,15 @@ public class FileFragment extends Fragment {
 
     WebView webView;
     ImageView imageView;
+
+    public FileFragment(){
+
+    }
+
+    @SuppressLint("ValidFragment")
+    public FileFragment(File file){
+        displayedFile = file;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
