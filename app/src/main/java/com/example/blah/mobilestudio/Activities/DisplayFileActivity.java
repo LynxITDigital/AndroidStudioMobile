@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
