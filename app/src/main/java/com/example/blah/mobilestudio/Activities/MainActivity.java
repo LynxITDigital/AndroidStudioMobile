@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio.Activities;
+package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
 import android.content.Intent;
