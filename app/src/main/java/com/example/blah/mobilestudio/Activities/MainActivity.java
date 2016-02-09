@@ -1,4 +1,4 @@
-package com.example.blah.mobilestudio.activities;
+package com.example.blah.mobilestudio.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         setContentView(R.layout.activity_main);
 
         // Lock the layout, based on whether the device is a phone or a tablet
-        if(getResources().getBoolean(R.bool.isTablet)){
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        if(isTablet){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
