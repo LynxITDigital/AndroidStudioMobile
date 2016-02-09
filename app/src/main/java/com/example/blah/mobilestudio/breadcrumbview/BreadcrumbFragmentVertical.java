@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import com.example.blah.mobilestudio.R;
 
 /**
@@ -22,19 +23,19 @@ public class BreadcrumbFragmentVertical extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
+                             Bundle savedInstanceState) {
 
-        View v =  inflater.inflate(R.layout.breadcrumb_fragment_vertical, container, false);
+        View v = inflater.inflate(R.layout.breadcrumb_fragment_vertical, container, false);
 
         ArrayList<String> verticalMenuItems = new ArrayList<>();
-        breadCrumb =  (BreadcrumbView)v.findViewById(R.id.bread_bar_vertical);
+        breadCrumb = (BreadcrumbView) v.findViewById(R.id.bread_bar_vertical);
 
         // Set items in the Vertical menu
         verticalMenuItems.add("Project");
         verticalMenuItems.add("Structure");
         verticalMenuItems.add("Captures");
         breadCrumb.SetElements(verticalMenuItems);
-        return  v;
+        return v;
     }
 
     @Override
@@ -47,7 +48,6 @@ public class BreadcrumbFragmentVertical extends Fragment {
             throw new ClassCastException(activity.toString() + " must implement OnItemSelected");
         }
     }
-
 
     @Override
     public void onAttach(Context context) {

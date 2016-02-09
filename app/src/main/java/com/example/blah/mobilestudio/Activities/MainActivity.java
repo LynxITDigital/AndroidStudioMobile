@@ -22,6 +22,8 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
@@ -92,9 +94,11 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             }
         }
 
+        breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
         if (breadFragment != null) {
             breadFragment.currentPath = path;
-            breadFragment.onResume();
+            this.highlightBreadcrumbItem(path);
+            breadFragment.calculatePathAndSetTheListener(breadFragment.breadCrumb, path);
         }
     }
 
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     public void onBreadItemSelected(String path) {
         Log.d("brdcrumb item selected", path);
         this.highlightFIle(path);
+        this.highlightBreadcrumbItem(path);
     }
 
     @Override
@@ -236,6 +241,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         breadFragment.setOnClickListener(this);
         getFragmentManager().beginTransaction().replace(R.id.topBreadFragment, breadFragment).commit();
 
+    }
+
+    private void highlightBreadcrumbItem(String path) {
+        ArrayList<String> items = new ArrayList(Arrays.asList(path.substring(1).split("\\s*/\\s*")));
+        breadFragment = (BreadcrumbFragment) getFragmentManager().findFragmentById(R.id.topBreadFragment);
+        breadFragment.highlightSelectedItem(items.get(items.size() - 1), items.size() - 1);
     }
 
 }

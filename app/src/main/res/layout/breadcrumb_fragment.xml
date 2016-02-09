@@ -17,7 +17,7 @@
         custom:orientation="horizontal"
         custom:breadcrumbBgColor="#267ae1"
         custom:breadcrumbTextColor = "#07313e"
-        custom:breadcrumbTextSize = "60"
+        custom:breadcrumbTextSize = "8"
         custom:rootPath=""
         />
     </HorizontalScrollView>
