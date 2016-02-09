@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.blah.mobilestudio.Activities.DisplayFileActivity;
 import com.example.blah.mobilestudio.AndroidMonitor.AndroidMonitorFragment;
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.R;
@@ -34,11 +33,6 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
-    // Value for the fragments to call when they need the root folder string
-    public static final String ROOT_FOLDER = "root folder";
-    // Value for fragments to call when they need the current folder string
-    public static final String CURRENT_DIRECTORY = "current directory";
 
     public static final int PICK_DIRECTORY_REQUEST = 1;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
@@ -177,16 +171,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST);
         }
-    }
-
-    // TODO Finish this method
-
-    /**
-     * Called whenever the path value has changed. Notifies all fragments that need to
-     * know about the change.
-     */
-    public void rootFolderChanged() {
-
     }
 
     // How the activity responds after permissions have been granted or denied.
