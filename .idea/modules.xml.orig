@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mobilestudio.iml" filepath="$PROJECT_DIR$/mobilestudio.iml" />
+<<<<<<< HEAD
+     </modules>
+=======
+    </modules>
+>>>>>>> c1e444dc36fc16d26b402501c76be5f83e622014
+  </component>
+</project>
