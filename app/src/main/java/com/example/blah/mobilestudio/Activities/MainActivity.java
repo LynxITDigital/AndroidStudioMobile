@@ -2,7 +2,9 @@ package com.example.blah.mobilestudio.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -48,6 +50,13 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Lock the layout, based on whether the device is a phone or a tablet
+        if(getResources().getBoolean(R.bool.isTablet)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         // Set up the toolbar icons
         // Only the Open Icon, the up icon and the save icon are visible the entire time
