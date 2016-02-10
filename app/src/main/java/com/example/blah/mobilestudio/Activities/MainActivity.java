@@ -61,27 +61,21 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialise all of the UI elements
         setUpUI();
 
-        // Initialise the root folder value
         if (rootFolder == null) {
             rootFolder = "";
         }
 
-        // Set up the necessary permissions for the app
         handlePermissions();
     }
 
     // Sets up the UI of the Main Activity
     // Initialises the toolbar, the orientation and all of the fragments.
     private void setUpUI(){
-        // First set up the orientation of the app
         initialiseOrientation();
-        // Set up the toolbar icons
         initialiseToolbar();
 
-        // Set up the resizers
         setResizers();
 
         initialiseFragments();
@@ -89,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
 
     }
 
-    // Helper method
     // Initialises the toolbar of the main activity
     private void initialiseToolbar() {
         // Only the Open Icon, the up icon and the save icon are visible the entire time
@@ -99,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         setSupportActionBar(toolbar);
     }
 
-    // Helper method
     // Locks the orientation of the activity
     private void initialiseOrientation(){
         // Lock the layout, based on whether the device is a phone or a tablet
@@ -113,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    // Helper method
     // Initialises the fragments outside of the resizers
     private void initialiseFragments(){
 
