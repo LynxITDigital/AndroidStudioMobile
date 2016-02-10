@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     // Fragments
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
-    private ResizerFragment horizontalResizerFragment;;
+    private ResizerFragment horizontalResizerFragment;
     private ResizerFragment veritcalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
@@ -75,12 +75,8 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private void setUpUI(){
         initialiseOrientation();
         initialiseToolbar();
-
         setResizers();
-
         initialiseFragments();
-
-
     }
 
     // Initialises the toolbar of the main activity
