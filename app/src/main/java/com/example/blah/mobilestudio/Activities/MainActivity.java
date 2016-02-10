@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         breadFragment.setOnClickListener(this);
         getSupportFragmentManager()
                 .beginTransaction().
-                replace(R.id.topBreadFragment, breadFragment).commit();
+                replace(R.id.topBreadFragment, breadFragment).commitAllowingStateLoss();
 
     }
 
