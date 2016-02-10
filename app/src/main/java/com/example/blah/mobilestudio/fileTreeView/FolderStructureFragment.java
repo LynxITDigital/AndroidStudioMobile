@@ -1,9 +1,9 @@
 package com.example.blah.mobilestudio.fileTreeView;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,9 +93,9 @@ public class FolderStructureFragment extends Fragment {
     }
 
     /**
-     * Expand folder view to the file following the path and highlight the node.
+     *  Expand folder view to the file following the path and highlight the node.
      *
-     * @param path an absolute path giving the location of the file
+     *  @param path an absolute path giving the location of the file
      */
     public void highlightFile(String path) {
         tView.highlight(path);
