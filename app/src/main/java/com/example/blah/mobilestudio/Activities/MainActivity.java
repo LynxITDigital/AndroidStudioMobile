@@ -34,19 +34,17 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
-
+    // Constants to pass data to other fragments and activities
     public static final int PICK_DIRECTORY_REQUEST = 1;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
     // The smallest/largest amount of pixels that a view can be resized to.
     private static final float REGION_OFFSET = 100f;
 
-    private String currentFolder;
     private String rootFolder;
 
-    // The various UI elements available
     Toolbar toolbar;
 
+    // Fragments
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
     private ResizerFragment horizontalResizerFragment;;
@@ -62,6 +60,45 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialise all of the UI elements
+        setUpUI();
+
+        // Initialise the root folder value
+        if (rootFolder == null) {
+            rootFolder = "";
+        }
+
+        // Set up the necessary permissions for the app
+        handlePermissions();
+    }
+
+    // Sets up the UI of the Main Activity
+    // Initialises the toolbar, the orientation and all of the fragments.
+    private void setUpUI(){
+        // First set up the orientation of the app
+        initialiseOrientation();
+        // Set up the toolbar icons
+        initialiseToolbar();
+        setResizers();
+
+        initialiseFragments();
+
+
+    }
+
+    // Helper method
+    // Initialises the toolbar of the main activity
+    private void initialiseToolbar() {
+        // Only the Open Icon, the up icon and the save icon are visible the entire time
+        // All of the other icons are visible if there is room.
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+    }
+
+    // Helper method
+    // Locks the orientation of the activity
+    private void initialiseOrientation(){
         // Lock the layout, based on whether the device is a phone or a tablet
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if(isTablet){
@@ -70,12 +107,12 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        // Set up the toolbar icons
-        // Only the Open Icon, the up icon and the save icon are visible the entire time
-        // All of the other icons are visible if there is room.
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    // Helper method
+    // Initialises the fragments outside of the resizers
+    private void initialiseFragments(){
 
         // Set up the file fragment
         fileFragment = new FileFragment();
@@ -89,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         folderStructureFragment.setArguments(bundle);
 
         resetBreadcrumb(filePath);
-
-        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        setResizers();
         //fileFragment.setArguments(getIntent().getExtras());
         // Fragments common to both kinds of layouts
         getSupportFragmentManager().beginTransaction()
@@ -100,17 +134,6 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
                 .add(R.id.android_monitor, androidMonitorFragment)
                 .commit();
 
-        // Initialise the root and current folder values
-        if (rootFolder == null) {
-            rootFolder = "";
-        }
-
-        if (currentFolder == null) {
-            currentFolder = "";
-        }
-
-        // Set up the necessary permissions for the app
-        handlePermissions();
     }
 
     @Override
@@ -401,14 +424,5 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
         });
     }
 
-
-    public void setOrientation() {
-        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        }
-    }
 
 }
