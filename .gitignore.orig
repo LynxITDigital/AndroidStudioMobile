@@ -1,0 +1,13 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+<<<<<<< HEAD
+=======
+/.idea/misc.xml
+/.idea/modules.xml
+>>>>>>> ea03788902cc11b52c8a7c3c9e3dfe2119677f24
+.DS_Store
+/build
+/captures
