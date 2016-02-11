@@ -226,7 +226,12 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
                     rootFolder = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
                     Log.d("root", rootFolder);
                     openFile(rootFolder);
-                    resetBreadcrumb(rootFolder);
+                    if (breadFragment != null) {
+                        breadFragment.currentPath = rootFolder;
+                        breadFragment.breadCrumb.rootPath = "";
+                        breadFragment.setOnClickListener(this);
+                        breadFragment.calculatePathAndSetTheListener(breadFragment.breadCrumb, breadFragment.currentPath);
+                    }
                 }
         }
     }

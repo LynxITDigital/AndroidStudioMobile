@@ -28,7 +28,7 @@ public class BreadcrumbView extends LinearLayout {
     private ArrayList<String> listOfElements;
 
     Paint paintColorStyle;
-    String rootPath = "";
+    public String rootPath = "";
     String currentPath = "";
     String highlightedItem = "";
     int highlightedIndex = 0;
