@@ -9,14 +9,7 @@ import android.util.Log;
  * Created by Stephen on 11/02/2016.
  */
 public abstract class SafeActivity extends AppCompatActivity{
-    private Throwable onCreateError;
     private Throwable commonLogicError;
-    private Throwable onResumeError;
-    private Throwable onStartError;
-    private Throwable onRestartError;
-    private Throwable onPauseError;
-    private Throwable onStopError;
-    private Throwable onDestroyError;
 
     @Override
     protected final void onCreate(Bundle savedInstanceState){
@@ -29,8 +22,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityCreate(savedInstanceState);
         } catch (Throwable th){
-            onCreateError = th;
-            Log.e("On create error", onCreateError.getMessage());
+            Log.e("On create error", th.getMessage());
         }
 
     }
@@ -46,8 +38,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityResume();
         } catch (Throwable th){
-            onResumeError = th;
-            Log.e("On resume error", onResumeError.getMessage());
+            Log.e("On resume error", th.getMessage());
         }
     }
 
@@ -62,8 +53,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityStart();
         } catch (Throwable th){
-            onStartError = th;
-            Log.e("On start error", onStartError.getMessage());
+            Log.e("On start error", th.getMessage());
         }
     }
 
@@ -78,8 +68,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityRestart();
         } catch (Throwable th){
-            onRestartError = th;
-            Log.e("On restart error", onRestartError.getMessage());
+            Log.e("On restart error", th.getMessage());
         }
     }
 
@@ -94,8 +83,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityPause();
         } catch (Throwable th){
-            onPauseError = th;
-            Log.e("On pause error", onPauseError.getMessage());
+            Log.e("On pause error", th.getMessage());
         }
     }
 
@@ -110,8 +98,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityStop();
         } catch (Throwable th){
-            onStopError = th;
-            Log.e("On stop error", onStopError.getMessage());
+            Log.e("On stop error", th.getMessage());
         }
     }
 
@@ -126,8 +113,7 @@ public abstract class SafeActivity extends AppCompatActivity{
         } try {
             onActivityDestroy();
         } catch (Throwable th){
-            onDestroyError = th;
-            Log.e("On destroy error", onDestroyError.getMessage());
+            Log.e("On destroy error", th.getMessage());
         }
     }
 
@@ -137,35 +123,35 @@ public abstract class SafeActivity extends AppCompatActivity{
      * Safe version of onCreate()
      * @param savedInstanceState - the savedInstanceState passed from onCreate
      */
-    protected abstract void onActivityCreate(Bundle savedInstanceState);
+    protected void onActivityCreate(Bundle savedInstanceState){};
 
     /**
      * Safe version of onResume()
      */
-    protected abstract void onActivityResume();
+    protected void onActivityResume(){};
 
     /**
      * Safe version of onStart()
      */
-    protected abstract void onActivityStart();
+    protected void onActivityStart(){};
 
     /**
      * Safe version of onRestart()
      */
-    protected abstract void onActivityRestart();
+    protected void onActivityRestart(){};
 
     /**
      * Safe version of onStop()
      */
-    protected abstract void onActivityStop();
+    protected void onActivityStop(){};
 
     /**
      * Safe version of onPause()
      */
-    protected abstract void onActivityPause();
+    protected void onActivityPause(){};
 
     /**
      * Safe version of onDestroy()
      */
-    protected abstract void onActivityDestroy();
+    protected void onActivityDestroy(){};
 }

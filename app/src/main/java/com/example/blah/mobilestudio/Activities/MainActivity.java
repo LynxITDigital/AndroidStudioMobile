@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
+public class MainActivity extends SafeActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
     // Constants to pass data to other fragments and activities
     public static final int PICK_DIRECTORY_REQUEST = 1;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private boolean isLandscape;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onActivityCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

@@ -12,11 +12,11 @@ import java.io.File;
 /**
  * Created by Stephen on 8/02/2016.
  */
-public class DisplayFileActivity extends FragmentActivity {
+public class DisplayFileActivity extends SafeActivity {
     public static final String FILE_NAME = "file";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onActivityCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_file);
 
