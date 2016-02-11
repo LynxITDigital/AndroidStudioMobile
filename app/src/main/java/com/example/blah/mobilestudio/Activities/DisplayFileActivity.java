@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * Created by Stephen on 8/02/2016.
  */
-public class DisplayFileActivity extends SafeActivity {
+public class DisplayFileActivity extends SafeIntermediateActivity {
     public static final String FILE_NAME = "file";
 
     @Override

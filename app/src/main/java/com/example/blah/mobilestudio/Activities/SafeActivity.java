@@ -123,35 +123,35 @@ public abstract class SafeActivity extends AppCompatActivity{
      * Safe version of onCreate()
      * @param savedInstanceState - the savedInstanceState passed from onCreate
      */
-    protected void onActivityCreate(Bundle savedInstanceState){};
+    protected abstract void onActivityCreate(Bundle savedInstanceState);
 
     /**
      * Safe version of onResume()
      */
-    protected void onActivityResume(){};
+    protected abstract void onActivityResume();
 
     /**
      * Safe version of onStart()
      */
-    protected void onActivityStart(){};
+    protected abstract void onActivityStart();
 
     /**
      * Safe version of onRestart()
      */
-    protected void onActivityRestart(){};
+    protected abstract void onActivityRestart();
 
     /**
      * Safe version of onStop()
      */
-    protected void onActivityStop(){};
+    protected abstract void onActivityStop();
 
     /**
      * Safe version of onPause()
      */
-    protected void onActivityPause(){};
+    protected abstract void onActivityPause();
 
     /**
      * Safe version of onDestroy()
      */
-    protected void onActivityDestroy(){};
+    protected abstract void onActivityDestroy();
 }
