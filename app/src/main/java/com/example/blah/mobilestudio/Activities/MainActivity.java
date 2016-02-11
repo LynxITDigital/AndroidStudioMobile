@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,7 +20,6 @@ import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.Resizer.ResizerFragment;
 import com.example.blah.mobilestudio.Resizer.ResizerRunnable;
-import com.example.blah.mobilestudio.Resizer.SizableRegion;
 import com.example.blah.mobilestudio.breadcrumbview.BreadcrumbFragment;
 import com.example.blah.mobilestudio.breadcrumbview.OnItemSelectedListener;
 import com.example.blah.mobilestudio.fileTreeView.FolderStructureFragment;
@@ -33,7 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
+public class MainActivity extends SafeActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
     // Constants to pass data to other fragments and activities
     public static final int PICK_DIRECTORY_REQUEST = 1;
@@ -57,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements FolderStructureFr
     private boolean isLandscape;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onActivityCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
 
         setUpUI();
