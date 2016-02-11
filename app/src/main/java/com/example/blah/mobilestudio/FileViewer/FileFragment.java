@@ -1,7 +1,8 @@
 package com.example.blah.mobilestudio.FileViewer;
 
 
-import android.app.Fragment;
+import android.annotation.SuppressLint;
+import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -46,21 +47,22 @@ public class FileFragment extends Fragment {
     WebView webView;
     ImageView imageView;
 
+    public FileFragment(){
+
+    }
+
+    @SuppressLint("ValidFragment")
+    public FileFragment(File file){
+        displayedFile = file;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         webView = (WebView) rootView.findViewById(R.id.web_layout);
         imageView = (ImageView) rootView.findViewById(R.id.image_layout);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            String filePath = args.getString(FILE_CONTENTS);
-            if (filePath != null) {
-                setDisplayedFile(new File(filePath));
-            } else {
-                displayFileText();
-            }
-        }
+        displayFileText();
 
         return rootView;
     }

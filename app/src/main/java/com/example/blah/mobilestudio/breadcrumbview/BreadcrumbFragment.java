@@ -1,11 +1,11 @@
 package com.example.blah.mobilestudio.breadcrumbview;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +19,10 @@ import com.example.blah.mobilestudio.R;
  * Created by alit on 25/01/2016.
  */
 public class BreadcrumbFragment extends Fragment {
-
-    public ArrayList<String> breadcrumbItems = new ArrayList<>();
     public String currentPath = "";
     OnItemSelectedListener mListener;
     View v;
-    BreadcrumbView breadCrumb;
-
+    public BreadcrumbView breadCrumb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +38,7 @@ public class BreadcrumbFragment extends Fragment {
             currentPath = savedInstanceState.getString("currentPath");
             breadCrumb.rootPath = savedInstanceState.getString("rootPath");
             breadCrumb.highlightedItem = savedInstanceState.getString("highlightedItem");
-            breadCrumb.highlightedIndex= savedInstanceState.getInt("highlightedIndex");
+            breadCrumb.highlightedIndex = savedInstanceState.getInt("highlightedIndex");
         }
         return v;
     }
@@ -50,8 +47,8 @@ public class BreadcrumbFragment extends Fragment {
     public void onStart() {
         super.onStart();
         breadCrumb = (BreadcrumbView) v.findViewById(R.id.bread_bar);
-        if (currentPath.length() > 0 && breadCrumb.rootPath .length() > 0) {
-            CalculatePathAndSetTheListener(breadCrumb, currentPath);
+        if (currentPath.length() > 0 && breadCrumb.rootPath.length() > 0) {
+            calculatePathAndSetTheListener(breadCrumb, currentPath);
         }
     }
 
@@ -59,7 +56,7 @@ public class BreadcrumbFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (currentPath.length() > 0) {
-            CalculatePathAndSetTheListener(breadCrumb, currentPath);
+            calculatePathAndSetTheListener(breadCrumb, currentPath);
         }
     }
 
@@ -75,7 +72,7 @@ public class BreadcrumbFragment extends Fragment {
             breadCrumb.rootPath += "/" + items.get(i);
     }
 
-    public void highlightSelectedItem(String item, int inx){
+    public void highlightSelectedItem(String item, int inx) {
         breadCrumb.highlightedItem = item;
         breadCrumb.highlightedIndex = inx;
     }
@@ -107,7 +104,7 @@ public class BreadcrumbFragment extends Fragment {
         }
     }
 
-    private void CalculatePathAndSetTheListener(BreadcrumbView breadCrumb, String currentPath){
+    public void calculatePathAndSetTheListener(BreadcrumbView breadCrumb, String currentPath) {
         // Remove the root folders path from the beginning of the selected path
         currentPath = currentPath.replace(breadCrumb.rootPath, "");
         // Retrive the sequence of the remaining folders in the path
