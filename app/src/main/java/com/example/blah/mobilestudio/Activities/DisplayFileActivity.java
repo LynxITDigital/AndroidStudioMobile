@@ -1,8 +1,6 @@
 package com.example.blah.mobilestudio.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.blah.mobilestudio.FileViewer.FileFragment;
 import com.example.blah.mobilestudio.R;
@@ -17,7 +15,6 @@ public class DisplayFileActivity extends SafeActivity {
 
     @Override
     protected void onActivityCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.display_file);
 
         FileFragment fileFragment = new FileFragment(new File(getIntent().getStringExtra(FILE_NAME)));
