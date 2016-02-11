@@ -115,7 +115,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         // Fragments common to both kinds of layouts
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
-                .add(R.id.explorer_fragment, folderStructureFragment)
+                .replace(R.id.explorer_fragment, folderStructureFragment)
                 .add(R.id.android_monitor, androidMonitorFragment)
                 .commit();
 
