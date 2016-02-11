@@ -31,7 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends SafeActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
+public class MainActivity extends SafeIntermediateActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
     // Constants to pass data to other fragments and activities
     public static final int PICK_DIRECTORY_REQUEST = 1;
