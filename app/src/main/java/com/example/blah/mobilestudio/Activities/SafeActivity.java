@@ -13,6 +13,10 @@ public abstract class SafeActivity extends AppCompatActivity{
     private Throwable commonLogicError;
     private Throwable onResumeError;
     private Throwable onStartError;
+    private Throwable onRestartError;
+    private Throwable onPauseError;
+    private Throwable onStopError;
+    private Throwable onDestroyError;
 
     @Override
     protected final void onCreate(Bundle savedInstanceState){
@@ -63,6 +67,72 @@ public abstract class SafeActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected final void onRestart(){
+        super.onRestart();
+        try {
+            // Common logic to all classes
+        } catch (Throwable th){
+            commonLogicError = th;
+            Log.e("Common logic error", commonLogicError.getMessage());
+        } try {
+            onActivityRestart();
+        } catch (Throwable th){
+            onRestartError = th;
+            Log.e("On restart error", onRestartError.getMessage());
+        }
+    }
+
+    @Override
+    protected final void onPause(){
+        super.onPause();
+        try {
+            // Common logic to all classes
+        } catch (Throwable th){
+            commonLogicError = th;
+            Log.e("Common logic error", commonLogicError.getMessage());
+        } try {
+            onActivityPause();
+        } catch (Throwable th){
+            onPauseError = th;
+            Log.e("On pause error", onPauseError.getMessage());
+        }
+    }
+
+    @Override
+    protected final void onStop(){
+        super.onStop();
+        try {
+            // Common logic to all classes
+        } catch (Throwable th){
+            commonLogicError = th;
+            Log.e("Common logic error", commonLogicError.getMessage());
+        } try {
+            onActivityStop();
+        } catch (Throwable th){
+            onStopError = th;
+            Log.e("On stop error", onStopError.getMessage());
+        }
+    }
+
+    @Override
+    protected final void onDestroy(){
+        super.onDestroy();
+        try {
+            // Common logic to all classes
+        } catch (Throwable th){
+            commonLogicError = th;
+            Log.e("Common logic error", commonLogicError.getMessage());
+        } try {
+            onActivityDestroy();
+        } catch (Throwable th){
+            onDestroyError = th;
+            Log.e("On destroy error", onDestroyError.getMessage());
+        }
+    }
+
+
+
     /**
      * Safe version of onCreate()
      * @param savedInstanceState - the savedInstanceState passed from onCreate
@@ -78,4 +148,24 @@ public abstract class SafeActivity extends AppCompatActivity{
      * Safe version of onStart()
      */
     protected abstract void onActivityStart();
+
+    /**
+     * Safe version of onRestart()
+     */
+    protected abstract void onActivityRestart();
+
+    /**
+     * Safe version of onStop()
+     */
+    protected abstract void onActivityStop();
+
+    /**
+     * Safe version of onPause()
+     */
+    protected abstract void onActivityPause();
+
+    /**
+     * Safe version of onDestroy()
+     */
+    protected abstract void onActivityDestroy();
 }
