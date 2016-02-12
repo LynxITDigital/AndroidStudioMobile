@@ -15,9 +15,9 @@ import com.example.blah.mobilestudio.R;
  */
 public class AndroidMonitorFragment extends Fragment {
 
-    ViewPager viewPager;
-    PagerAdapter pagerAdapter;
-    View fragmentView;
+    private ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
+    private View fragmentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
