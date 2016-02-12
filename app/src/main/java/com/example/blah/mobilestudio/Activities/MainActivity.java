@@ -33,12 +33,11 @@ import java.util.Arrays;
 
 public class MainActivity extends SafeIntermediateActivity implements FolderStructureFragment.OnFileSelectedListener, OnItemSelectedListener {
 
-    // Constants to pass data to other fragments and activities
     public static final int PICK_DIRECTORY_REQUEST = 1;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
     // The smallest/largest amount of pixels that a view can be resized to.
     public static final float REGION_OFFSET = 100f;
-    private Toolbar toolbar;
+
     // Fragments
     private FolderStructureFragment folderStructureFragment;
     private FileFragment fileFragment;
@@ -52,28 +51,27 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     @Override
     protected void onActivityCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-
         setUpUI();
-
         handlePermissions();
     }
 
     private void setUpUI() {
         initialiseOrientation();
         initialiseToolbar();
-        setResizers();
-        initialiseFragments();
+        initFragments();
+        if (isLandscape) {
+            initFragmentsForLandscapeMode();
+        }
     }
 
     private void initialiseToolbar() {
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
     }
 
-    // Locks the orientation of the activity
     private void initialiseOrientation() {
         // Lock the layout, based on whether the device is a phone or a tablet
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
@@ -86,26 +84,38 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    private void initialiseFragments() {
+    private void initFragments() {
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
+        initFolderFragment(filePath);
+        initHBreadcrumbFragment(filePath);
+        initMonitorFragment();
+        initVerticalResizerFragment();
+    }
+
+    private void initMonitorFragment() {
         androidMonitorFragment = new AndroidMonitorFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.android_monitor, androidMonitorFragment)
+                .commit();
+    }
 
+    private void initFragmentsForLandscapeMode() {
+        initHorizontalResizerFragment();
+        fileFragment = new FileFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_fragment, fileFragment)
+                .commit();
+    }
+
+    private void initFolderFragment(String filePath) {
         folderStructureFragment = new FolderStructureFragment();
         Bundle bundle = new Bundle();
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         bundle.putString(FolderStructureFragment.FILE_PATH, filePath);
         folderStructureFragment.setArguments(bundle);
-
-        resetBreadcrumb(filePath);
-
-        //fileFragment.setArguments(getIntent().getExtras());
-        // Fragments common to both kinds of layouts
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
-                .replace(R.id.explorer_fragment, folderStructureFragment)
-                .add(R.id.android_monitor, androidMonitorFragment)
-                .commit();
-
+                .replace(R.id.explorer_fragment, folderStructureFragment).commitAllowingStateLoss();
     }
 
     @Override
@@ -164,7 +174,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
 
                 chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
 
-                // REQUEST_DIRECTORY is a constant integer to identify the request, e.g. 0
                 startActivityForResult(chooserIntent, PICK_DIRECTORY_REQUEST);
                 return true;
             default:
@@ -237,7 +246,8 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
      * -can-not-perform-this-action-after-onsaveinstancestate-wit
      */
     private void openFile(String filePath) {
-        FolderStructureFragment folderStructureFragment = (FolderStructureFragment) getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
+        FolderStructureFragment folderStructureFragment = (FolderStructureFragment)
+                getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
 
         if (folderStructureFragment != null) {
             Bundle b = folderStructureFragment.getArguments();
@@ -253,25 +263,24 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
             b.putString(FolderStructureFragment.FILE_PATH, filePath);
             folderStructureFragment.setOnClickListener(this);
             folderStructureFragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commitAllowingStateLoss();
-            ;
+            getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment,
+                    folderStructureFragment).commitAllowingStateLoss();
         }
     }
 
     private void highlightFIle(String filePath) {
-        FolderStructureFragment folderFragment = (FolderStructureFragment) getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
+        FolderStructureFragment folderFragment = (FolderStructureFragment)
+                getSupportFragmentManager().findFragmentById(R.id.explorer_fragment);
         folderFragment.highlightFile(filePath);
     }
 
-    private void resetBreadcrumb(String filePath) {
-        //Horizontal Breadcrumb reset
+    private void initHBreadcrumbFragment(String filePath) {
         breadFragment = (BreadcrumbFragment) getSupportFragmentManager().findFragmentById(R.id.topBreadFragment);
         breadFragment.currentPath = filePath;
 
         breadFragment.setOnClickListener(this);
-        getSupportFragmentManager()
-                .beginTransaction().
-                replace(R.id.topBreadFragment, breadFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.topBreadFragment, breadFragment).commitAllowingStateLoss();
 
     }
 
@@ -281,29 +290,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         breadFragment.highlightSelectedItem(items.get(items.size() - 1), items.size() - 1);
     }
 
-    private void setResizers() {
-        View outerLayout = findViewById(R.id.screen_layout).getRootView();
-        // Set up the resizer fragments
-        // need the horizontal fragment in landscape
-
-        if (isLandscape) {
-            // Set up the file fragment
-            fileFragment = new FileFragment();
-            // Do not create the horizontal resizer fragment if portrait
-            horizontalResizerFragment = new ResizerFragment();
-            Bundle horizontalResizerBundle = new Bundle();
-            horizontalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.explorer_fragment);
-            horizontalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.content_fragment);
-            horizontalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, true);
-            horizontalResizerFragment.setArguments(horizontalResizerBundle);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_fragment, fileFragment)
-                    .add(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
-                    .commit();
-        }
-
-        // Need vertical resizer in both portrait and landscape
+    private void initVerticalResizerFragment() {
         veritcalResizerFragment = new ResizerFragment();
         Bundle veritcalResizerBundle = new Bundle();
         veritcalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.top_layout);
@@ -311,6 +298,21 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         veritcalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, false);
         veritcalResizerFragment.setArguments(veritcalResizerBundle);
 
-        outerLayout.post(new ResizerRunnable(outerLayout, isLandscape, horizontalResizerFragment, veritcalResizerFragment));
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.top_monitor_resizer_vertical_fragment, veritcalResizerFragment)
+                .commit();
+    }
+
+    private void initHorizontalResizerFragment() {
+        horizontalResizerFragment = new ResizerFragment();
+        Bundle horizontalResizerBundle = new Bundle();
+        horizontalResizerBundle.putInt(ResizerFragment.FIRST_VIEW_BUNDLE_KEY, R.id.explorer_fragment);
+        horizontalResizerBundle.putInt(ResizerFragment.THIRD_VIEW_BUNDLE_KEY, R.id.content_fragment);
+        horizontalResizerBundle.putBoolean(ResizerFragment.IS_HORIZONTAL, true);
+        horizontalResizerFragment.setArguments(horizontalResizerBundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.explorer_content_resizer_horizontal_fragment, horizontalResizerFragment)
+                .commit();
     }
 }
