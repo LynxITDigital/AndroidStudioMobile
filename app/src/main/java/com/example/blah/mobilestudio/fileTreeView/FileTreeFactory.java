@@ -27,7 +27,9 @@ public class FileTreeFactory {
             File[] files = rootFile.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    setUpNode(root, file);
+                    if (file.canRead()) {
+                        setUpNode(root, file);
+                    }
                 }
             }
         }

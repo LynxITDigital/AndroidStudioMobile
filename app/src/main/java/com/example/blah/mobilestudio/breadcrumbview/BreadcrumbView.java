@@ -2,14 +2,11 @@ package com.example.blah.mobilestudio.breadcrumbview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.provider.CalendarContract;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,9 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import com.example.blah.mobilestudio.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by alit on 21/01/2016.
@@ -111,7 +108,7 @@ public class BreadcrumbView extends LinearLayout {
                             v.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.DARKEN);
                         }
                         if (mListener != null)
-                            mListener.onBreadItemSelected(currentPath);
+                            mListener.onBreadItemSelected(rootPath, currentPath);
                     }
                 });
             }
