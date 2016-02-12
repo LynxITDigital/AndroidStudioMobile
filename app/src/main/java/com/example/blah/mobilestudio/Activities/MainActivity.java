@@ -38,17 +38,15 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
     // The smallest/largest amount of pixels that a view can be resized to.
     public static final float REGION_OFFSET = 100f;
-    Toolbar toolbar;
+    private Toolbar toolbar;
     // Fragments
-    FolderStructureFragment folderStructureFragment;
-    FileFragment fileFragment;
-    private String rootFolder;
+    private FolderStructureFragment folderStructureFragment;
+    private FileFragment fileFragment;
     private ResizerFragment horizontalResizerFragment;
     private ResizerFragment veritcalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
 
-    // The orientation of the screen
     private boolean isLandscape;
 
     @Override
@@ -57,15 +55,9 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
 
         setUpUI();
 
-        if (rootFolder == null) {
-            rootFolder = "";
-        }
-
         handlePermissions();
     }
 
-    // Sets up the UI of the Main Activity
-    // Initialises the toolbar, the orientation and all of the fragments.
     private void setUpUI() {
         initialiseOrientation();
         initialiseToolbar();
@@ -73,7 +65,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         initialiseFragments();
     }
 
-    // Initialises the toolbar of the main activity
     private void initialiseToolbar() {
         // Only the Open Icon, the up icon and the save icon are visible the entire time
         // All of the other icons are visible if there is room.
@@ -95,7 +86,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    // Initialises the fragments outside of the resizers
     private void initialiseFragments() {
 
         androidMonitorFragment = new AndroidMonitorFragment();
@@ -153,9 +143,9 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     }
 
     @Override
-    public void onBreadItemSelected(String path) {
+    public void onBreadItemSelected(String rootPath, String path) {
         Log.d("brdcrumb item selected", path);
-        this.highlightFIle(path);
+        this.highlightFIle(rootPath + path);
         this.highlightBreadcrumbItem(path);
     }
 
@@ -182,7 +172,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         }
     }
 
-    // Check if the permission is not currently granted. If not, request it
     private void handlePermissions() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -195,7 +184,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         }
     }
 
-    // How the activity responds after permissions have been granted or denied.
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -215,22 +203,25 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         }
     }
 
-    // How the app responds after the directory chooser activity has been launched and returned.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PICK_DIRECTORY_REQUEST:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                    rootFolder = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+                    String rootFolder = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
                     Log.d("root", rootFolder);
                     openFile(rootFolder);
-                    if (breadFragment != null) {
-                        breadFragment.currentPath = rootFolder;
-                        breadFragment.breadCrumb.setRootPath("");
-                        breadFragment.setOnClickListener(this);
-                        breadFragment.calculatePathAndSetTheListener(breadFragment.breadCrumb, breadFragment.currentPath);
-                    }
+                    createBreadcrumb(rootFolder);
                 }
+        }
+    }
+
+    private void createBreadcrumb(String rootFolder) {
+        if (breadFragment != null) {
+            breadFragment.currentPath = rootFolder;
+            breadFragment.breadCrumb.setRootPath("");
+            breadFragment.setOnClickListener(this);
+            breadFragment.calculatePathAndSetTheListener(breadFragment.breadCrumb, breadFragment.currentPath);
         }
     }
 
@@ -290,7 +281,6 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         breadFragment.highlightSelectedItem(items.get(items.size() - 1), items.size() - 1);
     }
 
-    // Initialises the resizers
     private void setResizers() {
         View outerLayout = findViewById(R.id.screen_layout).getRootView();
         // Set up the resizer fragments
