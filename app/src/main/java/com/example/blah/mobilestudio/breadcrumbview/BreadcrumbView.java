@@ -27,21 +27,30 @@ import com.example.blah.mobilestudio.R;
 public class BreadcrumbView extends LinearLayout {
     private ArrayList<String> listOfElements;
 
-    Paint paintColorStyle;
-    String rootPath = "";
-    String currentPath = "";
-    String highlightedItem = "";
-    int highlightedIndex = 0;
-    String orientation = "";
-    Boolean isPathable = true;
-    Integer breadcrumbTextColor;
-    Integer breadcrumbTextSize;
-    Integer breadcrumbBgColor;
+    private Paint paintColorStyle;
+    private String rootPath;
+    private String currentPath;
+    public String highlightedItem;
+    public int highlightedIndex;
+    private String orientation;
+    private Boolean isPathable;
+    private Integer breadcrumbTextColor;
+    private Integer breadcrumbTextSize;
+    private Integer breadcrumbBgColor;
     private static int SPACER_WIDTH = 5;
-    OnItemSelectedListener mListener;
+    private OnItemSelectedListener mListener;
 
     public BreadcrumbView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        // Initialize properties
+        rootPath = "";
+        currentPath = "";
+        highlightedItem = "";
+        highlightedItem = "";
+        highlightedIndex = 0;
+        orientation = "";
+        isPathable = true;
 
         this.listOfElements = new ArrayList<String>();
         paintColorStyle = new Paint();
@@ -214,6 +223,14 @@ public class BreadcrumbView extends LinearLayout {
         };
         newBackground.setTileModeXY(background.getTileModeX(), background.getTileModeY());
         tv.setBackgroundDrawable(newBackground);
+    }
+
+    public void setRootPath(String p){
+        rootPath = p;
+    }
+
+    public String getRootPath(){
+        return rootPath;
     }
 
 }
