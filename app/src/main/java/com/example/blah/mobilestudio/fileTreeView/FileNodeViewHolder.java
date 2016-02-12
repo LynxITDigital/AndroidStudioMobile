@@ -31,7 +31,11 @@ public class FileNodeViewHolder extends TreeNode.BaseNodeViewHolder<FileNodeView
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.layout_file_node, null, false);
         TextView tvValue = (TextView) view.findViewById(R.id.node_value);
-        tvValue.setText(value.file.getName());
+        if (value.file.getName().isEmpty()) {
+            tvValue.setText("/");
+        } else {
+            tvValue.setText(value.file.getName());
+        }
 
         final ImageView iconView = (ImageView) view.findViewById(R.id.icon);
 

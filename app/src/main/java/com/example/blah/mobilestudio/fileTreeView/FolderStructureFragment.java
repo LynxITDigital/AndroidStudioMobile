@@ -41,12 +41,6 @@ public class FolderStructureFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -125,6 +119,14 @@ public class FolderStructureFragment extends Fragment {
             String filePath = item.file.getAbsolutePath();
             tView.setHighlightedNode(node);
             tView.setSelectedFilePath(filePath);
+            // build up children nodes
+            File[] files = item.file.listFiles();
+            node.deleteChildren();
+            if (files != null) {
+                for (File file : files) {
+                    FileTreeFactory.setUpNode(node, file);
+                }
+            }
             if (fileSelectedListener != null) {
                 fileSelectedListener.onFileSelected(filePath);
             }
