@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_monitor_resizer_vertical_fragment"
-        android:background="@color/very_light_grey">
+        android:background="@color/white">
 
         <FrameLayout
             android:id="@+id/android_monitor"

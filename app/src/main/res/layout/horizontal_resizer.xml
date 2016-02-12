@@ -11,13 +11,13 @@
         android:layout_width="@dimen/resizer_move_size"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/black" />
+        android:background="@color/very_light_grey" />
 
     <View
         android:id="@+id/resizer_horizontal_view"
         android:layout_width="@dimen/resizer_move_size"
         android:layout_height="@dimen/resizer_move_size"
-        android:background="@drawable/bordered_move"
+        android:background="@drawable/resizable_horizontal"
         android:layout_gravity="center" />
 
     <View
@@ -25,6 +25,6 @@
         android:layout_width="@dimen/resizer_move_size"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/black" />
+        android:background="@color/very_light_grey" />
 
 </LinearLayout>
