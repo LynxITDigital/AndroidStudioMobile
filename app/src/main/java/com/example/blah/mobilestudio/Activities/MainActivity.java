@@ -45,7 +45,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     private ResizerFragment veritcalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
     private BreadcrumbFragment breadFragment;
-
+    View outerLayout;
     private boolean isLandscape;
 
     @Override
@@ -58,10 +58,15 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     private void setUpUI() {
         initialiseOrientation();
         initialiseToolbar();
+        outerLayout = findViewById(R.id.screen_layout).getRootView();
+
         initFragments();
         if (isLandscape) {
             initFragmentsForLandscapeMode();
         }
+
+        outerLayout.post(new ResizerRunnable(outerLayout, isLandscape, horizontalResizerFragment,
+                veritcalResizerFragment));
     }
 
     private void initialiseToolbar() {

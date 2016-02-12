@@ -1,9 +1,9 @@
 package com.example.blah.mobilestudio.fileTreeView;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,31 @@ import java.io.File;
  * Created by Ye He on 20/01/16.
  */
 public class FolderStructureFragment extends Fragment {
+    public static final String FILE_PATH = "FILE_PATH";
     private FileTreeView tView;
     private OnFileSelectedListener fileSelectedListener;
-    public static final String FILE_PATH = "FILE_PATH";
     private String tState;
     private String selectedFilePath;
+    private TreeNode.TreeNodeClickListener myNodeClickListener = new TreeNode.TreeNodeClickListener() {
+        @Override
+        public void onClick(TreeNode node, Object value) {
+            FileNodeViewHolder.IconTreeItem item = (FileNodeViewHolder.IconTreeItem) value;
+            String filePath = item.file.getAbsolutePath();
+            tView.setHighlightedNode(node);
+            tView.setSelectedFilePath(filePath);
+            // build up children nodes
+            File[] files = item.file.listFiles();
+            node.deleteChildren();
+            if (files != null) {
+                for (File file : files) {
+                    FileTreeFactory.setUpNode(node, file);
+                }
+            }
+            if (fileSelectedListener != null) {
+                fileSelectedListener.onFileSelected(filePath);
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +68,9 @@ public class FolderStructureFragment extends Fragment {
 
         Bundle b = getArguments();
         String filePath = b.getString(FILE_PATH);
-        addFileTreeView(containerView, filePath);
+        if (containerView.getChildCount() == 0) {
+            addFileTreeView(containerView, filePath);
+        }
 
         if (tState != null) {
             tView.restoreState(tState);
@@ -87,16 +109,12 @@ public class FolderStructureFragment extends Fragment {
     }
 
     /**
-     *  Expand folder view to the file following the path and highlight the node.
+     * Expand folder view to the file following the path and highlight the node.
      *
-     *  @param path an absolute path giving the location of the file
+     * @param path an absolute path giving the location of the file
      */
     public void highlightFile(String path) {
         tView.highlight(path);
-    }
-
-    public interface OnFileSelectedListener {
-        void onFileSelected(String path);
     }
 
     public void setOnClickListener(OnFileSelectedListener onFileSelectedListener) {
@@ -112,25 +130,8 @@ public class FolderStructureFragment extends Fragment {
         containerView.addView(tView.getView());
     }
 
-    private TreeNode.TreeNodeClickListener myNodeClickListener = new TreeNode.TreeNodeClickListener() {
-        @Override
-        public void onClick(TreeNode node, Object value) {
-            FileNodeViewHolder.IconTreeItem item = (FileNodeViewHolder.IconTreeItem) value;
-            String filePath = item.file.getAbsolutePath();
-            tView.setHighlightedNode(node);
-            tView.setSelectedFilePath(filePath);
-            // build up children nodes
-            File[] files = item.file.listFiles();
-            node.deleteChildren();
-            if (files != null) {
-                for (File file : files) {
-                    FileTreeFactory.setUpNode(node, file);
-                }
-            }
-            if (fileSelectedListener != null) {
-                fileSelectedListener.onFileSelected(filePath);
-            }
-        }
-    };
+    public interface OnFileSelectedListener {
+        void onFileSelected(String path);
+    }
 
 }
