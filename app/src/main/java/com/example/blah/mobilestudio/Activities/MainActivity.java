@@ -38,14 +38,11 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST = 2;
     // The smallest/largest amount of pixels that a view can be resized to.
     public static final float REGION_OFFSET = 100f;
-
-    private String rootFolder;
-
     Toolbar toolbar;
-
     // Fragments
     FolderStructureFragment folderStructureFragment;
     FileFragment fileFragment;
+    private String rootFolder;
     private ResizerFragment horizontalResizerFragment;
     private ResizerFragment veritcalResizerFragment;
     private AndroidMonitorFragment androidMonitorFragment;
@@ -69,7 +66,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
 
     // Sets up the UI of the Main Activity
     // Initialises the toolbar, the orientation and all of the fragments.
-    private void setUpUI(){
+    private void setUpUI() {
         initialiseOrientation();
         initialiseToolbar();
         setResizers();
@@ -86,10 +83,10 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     }
 
     // Locks the orientation of the activity
-    private void initialiseOrientation(){
+    private void initialiseOrientation() {
         // Lock the layout, based on whether the device is a phone or a tablet
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if(isTablet){
+        if (isTablet) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -99,7 +96,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
     }
 
     // Initialises the fragments outside of the resizers
-    private void initialiseFragments(){
+    private void initialiseFragments() {
 
         androidMonitorFragment = new AndroidMonitorFragment();
 
@@ -127,7 +124,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         File file = new File(path);
         if (!file.isDirectory()) {
             // If in portrait mode, start a new activity, displaying the file
-            if(!isLandscape){
+            if (!isLandscape) {
                 Intent i = new Intent(this, DisplayFileActivity.class);
                 i.putExtra(DisplayFileActivity.FILE_NAME, path);
                 startActivity(i);
@@ -229,7 +226,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
                     openFile(rootFolder);
                     if (breadFragment != null) {
                         breadFragment.currentPath = rootFolder;
-                        breadFragment.breadCrumb.rootPath = "";
+                        breadFragment.breadCrumb.setRootPath("");
                         breadFragment.setOnClickListener(this);
                         breadFragment.calculatePathAndSetTheListener(breadFragment.breadCrumb, breadFragment.currentPath);
                     }
@@ -265,7 +262,8 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
             b.putString(FolderStructureFragment.FILE_PATH, filePath);
             folderStructureFragment.setOnClickListener(this);
             folderStructureFragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commitAllowingStateLoss();;
+            getSupportFragmentManager().beginTransaction().replace(R.id.explorer_fragment, folderStructureFragment).commitAllowingStateLoss();
+            ;
         }
     }
 
@@ -298,7 +296,7 @@ public class MainActivity extends SafeIntermediateActivity implements FolderStru
         // Set up the resizer fragments
         // need the horizontal fragment in landscape
 
-        if(isLandscape){
+        if (isLandscape) {
             // Set up the file fragment
             fileFragment = new FileFragment();
             // Do not create the horizontal resizer fragment if portrait

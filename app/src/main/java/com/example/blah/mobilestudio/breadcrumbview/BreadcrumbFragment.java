@@ -36,7 +36,7 @@ public class BreadcrumbFragment extends Fragment {
         breadCrumb = (BreadcrumbView) v.findViewById(R.id.bread_bar);
         if (savedInstanceState != null) {
             currentPath = savedInstanceState.getString("currentPath");
-            breadCrumb.rootPath = savedInstanceState.getString("rootPath");
+            breadCrumb.setRootPath(savedInstanceState.getString("rootPath"));
             breadCrumb.highlightedItem = savedInstanceState.getString("highlightedItem");
             breadCrumb.highlightedIndex = savedInstanceState.getInt("highlightedIndex");
         }
@@ -47,7 +47,7 @@ public class BreadcrumbFragment extends Fragment {
     public void onStart() {
         super.onStart();
         breadCrumb = (BreadcrumbView) v.findViewById(R.id.bread_bar);
-        if (currentPath.length() > 0 && breadCrumb.rootPath.length() > 0) {
+        if (currentPath.length() > 0 && breadCrumb.getRootPath().length() > 0) {
             calculatePathAndSetTheListener(breadCrumb, currentPath);
         }
     }
@@ -69,7 +69,7 @@ public class BreadcrumbFragment extends Fragment {
         // we need root path to communicate with tree-view structure
         ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
         for (int i = 0; i < items.size() - 1; i++)
-            breadCrumb.rootPath += "/" + items.get(i);
+            breadCrumb.setRootPath(breadCrumb.getRootPath() + "/" + items.get(i));
     }
 
     public void highlightSelectedItem(String item, int inx) {
@@ -106,7 +106,7 @@ public class BreadcrumbFragment extends Fragment {
 
     public void calculatePathAndSetTheListener(BreadcrumbView breadCrumb, String currentPath) {
         // Remove the root folders path from the beginning of the selected path
-        currentPath = currentPath.replace(breadCrumb.rootPath, "");
+        currentPath = currentPath.replace(breadCrumb.getRootPath(), "");
         // Retrive the sequence of the remaining folders in the path
         ArrayList<String> items = new ArrayList(Arrays.asList(currentPath.substring(1).split("\\s*/\\s*")));
         breadCrumb.SetElements(items);
@@ -118,7 +118,7 @@ public class BreadcrumbFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("currentPath", currentPath);
-        outState.putString("rootPath", breadCrumb.rootPath);
+        outState.putString("rootPath", breadCrumb.getRootPath());
         outState.putString("highlightedItem", breadCrumb.highlightedItem);
         outState.putInt("highlightedIndex", breadCrumb.highlightedIndex);
     }
