@@ -34,7 +34,9 @@ public class FolderStructureFragment extends Fragment {
             node.deleteChildren();
             if (files != null) {
                 for (File file : files) {
-                    FileTreeFactory.setUpNode(node, file);
+                    if (file.canRead()) {
+                        FileTreeFactory.setUpNode(node, file);
+                    }
                 }
             }
             if (fileSelectedListener != null) {
