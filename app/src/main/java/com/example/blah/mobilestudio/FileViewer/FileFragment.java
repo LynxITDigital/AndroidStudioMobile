@@ -127,7 +127,21 @@ public class FileFragment extends Fragment {
                 br.close();
                 String returnString = stringBuilder.toString();
                 // Do not allow the CData to end
-                return StringEscapeUtils.escapeHtml4(returnString).replaceAll("\n", "<br />\n");
+                return StringEscapeUtils.escapeHtml4(returnString).replaceAll("\n", "<br />\n")
+                        .replaceAll("import", "<font color='#0000ff'><b>import</b></font>")
+                        .replaceAll("private", "<font color='#0000ff'><b>private</b></font>")
+                        .replaceAll("public", "<font color='#0000ff'><b>public</b></font>")
+                        .replaceAll("protected", "<font color='#0000ff'><b>protected</b></font>")
+                        .replaceAll("new", "<font color='#0000ff'><b>new</b></font>")
+                        .replaceAll("class", "<font color='#0000ff'><b>class</b></font>")
+                        .replaceAll("if", "<font color='#0000ff'><b>if</b></font>")
+                        .replaceAll("else", "<font color='#0000ff'><b>else</b></font>")
+                        .replaceAll("while", "<font color='#0000ff'><b>while</b></font>")
+                        .replaceAll("for", "<font color='#0000ff'><b>for</b></font>")
+                        .replaceAll("try", "<font color='#0000ff'><b>catch</b></font>")
+                        .replaceAll("catch", "<font color='#0000ff'><b>catch</b></font>")
+                        .replaceAll("finally", "<font color='#0000ff'><b>finally</b></font>")
+                        .replaceAll("return", "<font color='#0000ff'><b>return</b></font>");
             } catch (IOException e) {
                 Log.d("error", e.getMessage());
             }
