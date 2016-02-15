@@ -214,6 +214,7 @@ public class TreeNode {
         protected AndroidTreeView tView;
         protected TreeNode mNode;
         private View mView;
+        private View nodeView;
         protected int containerStyle;
         protected Context context;
 
@@ -246,7 +247,10 @@ public class TreeNode {
         }
 
         public View getNodeView() {
-            return createNodeView(mNode, (E) mNode.getValue());
+            if (nodeView == null) {
+                nodeView = createNodeView(mNode, (E) mNode.getValue());
+            }
+            return nodeView;
         }
 
         public ViewGroup getNodeItemsView() {

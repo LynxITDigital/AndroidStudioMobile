@@ -36,6 +36,7 @@ public class AndroidTreeView {
     private boolean mUseDefaultAnimation = false;
     private boolean use2dScroll = false;
     private boolean fullWidth;
+    private ViewGroup rootView;
 
     public AndroidTreeView(Context context) {
         mContext = context;
@@ -95,19 +96,22 @@ public class AndroidTreeView {
 
 
     public View getView(int style) {
-        final ViewGroup view;
+        if (rootView != null) {
+            return rootView;
+        }
+
         if (style > 0) {
             ContextThemeWrapper newContext = new ContextThemeWrapper(mContext, style);
             if (use2dScroll) {
-                view = get2DView(newContext);
+                rootView = get2DView(newContext);
             } else {
-                view = new ScrollView(newContext);
+                rootView = new ScrollView(newContext);
             }
         } else {
             if (use2dScroll) {
-                view = get2DView(mContext);
+                rootView = get2DView(mContext);
             } else {
-                view = new ScrollView(mContext);
+                rootView = new ScrollView(mContext);
             }
         }
 
@@ -119,7 +123,7 @@ public class AndroidTreeView {
 
         viewTreeItems.setId(R.id.tree_items);
         viewTreeItems.setOrientation(LinearLayout.VERTICAL);
-        view.addView(viewTreeItems);
+        rootView.addView(viewTreeItems);
 
         mRoot.setViewHolder(new TreeNode.BaseNodeViewHolder(mContext) {
             @Override
@@ -134,7 +138,7 @@ public class AndroidTreeView {
         });
 
         expandNode(mRoot, false);
-        return view;
+        return rootView;
     }
 
     @NonNull
