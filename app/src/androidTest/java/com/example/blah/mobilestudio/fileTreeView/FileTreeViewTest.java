@@ -25,14 +25,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class FileTreeViewTest extends InstrumentationTestCase {
+public class FileTreeViewTest {
     private FileTreeView fileTreeView;
     private String filePath;
 
     @Before
     public void setUp() throws Exception {
         Context context = InstrumentationRegistry.getTargetContext();
-        File outputDir = context.getExternalCacheDir();
+        File outputDir = context.getCacheDir();
         assert outputDir != null;
         filePath = outputDir.getAbsolutePath() + "/111/222/333";
         File file = new File(filePath);

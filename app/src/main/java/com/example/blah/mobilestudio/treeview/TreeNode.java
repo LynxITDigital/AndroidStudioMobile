@@ -59,6 +59,10 @@ public class TreeNode {
         return this;
     }
 
+    public void deleteChildren() {
+        children.clear();
+    }
+
     public TreeNode addChildren(Collection<TreeNode> nodes) {
         for (TreeNode n : nodes) {
             addChild(n);

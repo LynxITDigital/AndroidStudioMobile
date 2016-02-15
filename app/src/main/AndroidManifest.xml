@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+        <activity android:name=".activities.DisplayFileActivity"/>
     </application>
 
 </manifest>

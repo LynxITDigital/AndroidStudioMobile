@@ -22,6 +22,8 @@ public class VerticalTextView extends TextView {
             topDown = false;
         } else
             topDown = true;
+        // This avoids clipping on resize
+        setSingleLine(true);
     }
 
     @Override
