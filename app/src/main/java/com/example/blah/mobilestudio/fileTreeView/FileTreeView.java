@@ -58,7 +58,6 @@ public class FileTreeView extends AndroidTreeView {
         if (treeNode == null) {
             return null;
         } else {
-            treeNode.deleteChildren();
             FileTreeFactory.setUpNodes(treeNode, parentFile);
             for (TreeNode childNode : treeNode.getChildren()) {
                 FileNodeViewHolder.IconTreeItem item = (FileNodeViewHolder.IconTreeItem) childNode.getValue();

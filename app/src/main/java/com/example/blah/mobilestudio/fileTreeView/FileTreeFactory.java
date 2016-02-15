@@ -23,6 +23,7 @@ public class FileTreeFactory {
     }
 
     public static void setUpNodes(TreeNode root, File rootFile) {
+        root.deleteChildren();
         if (rootFile.exists() && rootFile.isDirectory()) {
             File[] files = rootFile.listFiles();
             if (files != null) {
