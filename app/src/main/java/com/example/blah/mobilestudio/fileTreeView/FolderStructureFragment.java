@@ -30,15 +30,8 @@ public class FolderStructureFragment extends Fragment {
             tView.setHighlightedNode(node);
             tView.setSelectedFilePath(filePath);
             // build up children nodes
-            File[] files = item.file.listFiles();
-            node.deleteChildren();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.canRead()) {
-                        FileTreeFactory.setUpNode(node, file);
-                    }
-                }
-            }
+            FileTreeFactory.setUpNodes(node, item.file);
+
             if (fileSelectedListener != null) {
                 fileSelectedListener.onFileSelected(filePath);
             }

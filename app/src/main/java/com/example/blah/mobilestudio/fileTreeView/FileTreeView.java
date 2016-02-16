@@ -2,6 +2,9 @@ package com.example.blah.mobilestudio.fileTreeView;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.blah.mobilestudio.treeview.AndroidTreeView;
 import com.example.blah.mobilestudio.treeview.TreeNode;
@@ -33,6 +36,9 @@ public class FileTreeView extends AndroidTreeView {
         TreeNode treeNode = expandTo2(new File(path), mRoot);
         if (treeNode != null) {
             setHighlightedNode(treeNode);
+            View view = treeNode.getViewHolder().getNodeView();
+            ViewGroup rootView = (ViewGroup) getView();
+            rootView.requestChildFocus(view, view);
             selectedFilePath = path;
         }
     }
@@ -58,7 +64,6 @@ public class FileTreeView extends AndroidTreeView {
         if (treeNode == null) {
             return null;
         } else {
-            treeNode.deleteChildren();
             FileTreeFactory.setUpNodes(treeNode, parentFile);
             for (TreeNode childNode : treeNode.getChildren()) {
                 FileNodeViewHolder.IconTreeItem item = (FileNodeViewHolder.IconTreeItem) childNode.getValue();
