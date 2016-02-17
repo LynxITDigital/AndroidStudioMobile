@@ -23,10 +23,11 @@ public class HighlightListener extends JavaBaseListener {
         if (tokenType == JavaParser.IF) {
             rewriter.insertAfter(ctx.start, "</b></font>");
             rewriter.insertBefore(ctx.start, "<font color='#0000ff'><b>");
-        } else if (tokenType == JavaParser.COMMENT || tokenType == JavaParser.LINE_COMMENT) {
-            rewriter.insertAfter(ctx.start, "</i></font>");
-            rewriter.insertBefore(ctx.start, "<font color='2e8b57'><i>");
         }
+//        else if (tokenType == JavaParser.COMMENT || tokenType == JavaParser.LINE_COMMENT) {
+//            rewriter.insertAfter(ctx.start, "</i></font>");
+//            rewriter.insertBefore(ctx.start, "<font color='2e8b57'><i>");
+//        }
     }
 
 }
