@@ -13,12 +13,12 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * Created by yehe on 17/02/2016.
  */
 public class HighlightListener extends JavaBaseListener {
-    public static final String STRING_FONT_SUFFIX = "</font>";
-    public static final String STRING_FONT_PREFIX = "<font color='2e8b57'>";
-    public static final String ANNOTATION_FONT_PREFIX = "<font color='#BBB529'><b>";
-    public static final String ANNOTATION_FONT_SUFFIX = "</b></font>";
-    public static final String KEYWORD_FONT_PREFIX = "<font color='#0000ff'><b>";
-    public static final String KEYWORD_FONT_SUFFIX = "</b></font>";
+    private static final String STRING_FONT_SUFFIX = "</font>";
+    private static final String STRING_FONT_PREFIX = "<font color='2e8b57'>";
+    private static final String ANNOTATION_FONT_PREFIX = "<font color='#BBB529'><b>";
+    private static final String ANNOTATION_FONT_SUFFIX = "</b></font>";
+    private static final String KEYWORD_FONT_PREFIX = "<font color='#0000ff'><b>";
+    private static final String KEYWORD_FONT_SUFFIX = "</b></font>";
     private static final String MODIFIER_FONT_PREFIX = "<font color='#CC7832'>";
     private static final String MODIFIER_FONT_SUFFIX = "</font>";
     private static final String METHOD_NAME_FONT_PREFIX = "<font color='#FFC66D'>";
