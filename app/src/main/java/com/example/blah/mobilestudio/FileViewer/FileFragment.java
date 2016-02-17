@@ -2,12 +2,12 @@ package com.example.blah.mobilestudio.FileViewer;
 
 
 import android.annotation.SuppressLint;
-import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +15,14 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
-import org.antlr.v4.runtime.*;
-
 import com.example.blah.mobilestudio.R;
 import com.example.blah.mobilestudio.parser.JavaLexer;
 import com.example.blah.mobilestudio.parser.JavaParser;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,7 +80,6 @@ public class FileFragment extends Fragment {
      * Changes the contents in the text view to the contents of the file.
      */
     private void displayFileText() {
-        // If no file has been selected display the defualt text instructing the user to find a file
         if (displayedFile == null) {
             loadWebView(DEFAULT_TEXT);
             return;
@@ -132,8 +130,8 @@ public class FileFragment extends Fragment {
                 br.close();
                 String result = stringBuilder.toString();
                 result = highlightSourceCode(result);
-                // Todo: how to keep indentation in HTML?
-                return result.replaceAll(" ", "&#160").replaceAll("\n", "<br />\n");
+
+                return result.replaceAll("\n", "<br />\n");
             } catch (IOException e) {
                 Log.d("error", e.getMessage());
             }
@@ -141,10 +139,7 @@ public class FileFragment extends Fragment {
         }
 
         private String highlightSourceCode(String input) {
-
-            String returnString = StringEscapeUtils.escapeHtml4(input);
-
-            ANTLRInputStream antlrInputStream = new ANTLRInputStream(returnString);
+            ANTLRInputStream antlrInputStream = new ANTLRInputStream(input);
             JavaLexer javaLexer = new JavaLexer(antlrInputStream);
             CommonTokenStream tokens = new CommonTokenStream(javaLexer);
             JavaParser javaParser = new JavaParser(tokens);
@@ -158,10 +153,9 @@ public class FileFragment extends Fragment {
             String text = extractor.rewriter.getText();
 
             CommentFormatter commentFormatter = new CommentFormatter();
-            String textWiouthComments = commentFormatter.removeComments(text);
-            return commentFormatter.replaceComments(textWiouthComments);
+            String textWithoutComments = commentFormatter.removeComments(text);
+            return commentFormatter.replaceComments(textWithoutComments);
         }
-
 
         @Override
         protected void onPostExecute(String result) {
