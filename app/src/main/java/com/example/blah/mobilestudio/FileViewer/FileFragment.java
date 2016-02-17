@@ -130,19 +130,19 @@ public class FileFragment extends Fragment {
 
                 }
                 br.close();
-
-                String result = highlightSourceCode(stringBuilder);
-
+                String result = stringBuilder.toString();
+                result = highlightSourceCode(result);
                 // Todo: how to keep indentation in HTML?
-                return result.replaceAll("\n", "<br />\n");
+                return result.replaceAll(" ", "&#160").replaceAll("\n", "<br />\n");
             } catch (IOException e) {
                 Log.d("error", e.getMessage());
             }
             return null;
         }
 
-        private String highlightSourceCode(StringBuilder stringBuilder) {
-            String returnString = StringEscapeUtils.escapeHtml4(stringBuilder.toString());
+        private String highlightSourceCode(String input) {
+
+            String returnString = StringEscapeUtils.escapeHtml4(input);
 
             ANTLRInputStream antlrInputStream = new ANTLRInputStream(returnString);
             JavaLexer javaLexer = new JavaLexer(antlrInputStream);
