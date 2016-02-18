@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.blah.mobilestudio.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.example.blah.mobilestudio.R;
 
 /**
  * Created by alit on 25/01/2016.

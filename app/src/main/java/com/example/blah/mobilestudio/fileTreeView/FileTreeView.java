@@ -2,7 +2,6 @@ package com.example.blah.mobilestudio.fileTreeView;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 

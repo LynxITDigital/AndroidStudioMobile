@@ -1,17 +1,16 @@
 package com.example.blah.mobilestudio.breadcrumbview;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.example.blah.mobilestudio.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by alit on 25/01/2016.
