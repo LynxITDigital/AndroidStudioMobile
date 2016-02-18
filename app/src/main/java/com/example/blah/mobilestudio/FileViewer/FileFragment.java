@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 
 /**
@@ -35,8 +37,8 @@ public class FileFragment extends Fragment {
             + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     public static String FILE_CONTENTS = "File contents";
-    private static String HTML_OPENING = "<html><body><p>";
-    private static String HTML_CLOSING = "</p></html></body>";
+    private static String HTML_OPENING = "<html><body><pre>";
+    private static String HTML_CLOSING = "</pre></body></html>";
     private static String[] IMAGE_FORMATS = {"jpeg", "png", "bmp", "webp", "jpg"};
 
     WebView webView;
@@ -198,7 +200,15 @@ public class FileFragment extends Fragment {
     private void loadWebView(String input) {
         imageView.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
-        webView.loadData(HTML_OPENING + input + HTML_CLOSING, "text/html; charset=utf-8", null);
+        String html = HTML_OPENING + input + HTML_CLOSING;
+        try {
+            // For the use of replaceAll, check this:
+            // http://stackoverflow.com/questions/5027084/android-webview-incorrectly-handling-newlines-in-preformatted-text
+            // Might be fragile, nee more testing.
+            webView.loadData(URLEncoder.encode(html, "utf-8").replaceAll("\\+", "%20"), "text/html; charset=utf-8", null);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public File getDisplayedFile() {

@@ -47,7 +47,7 @@ public class JavaTextFormatter extends TextFormatter {
 
         CommentFormatter commentFormatter = new CommentFormatter();
         String textWithoutComments = commentFormatter.removeComments(text);
-        return commentFormatter.replaceComments(textWithoutComments).replaceAll("\n", "<br />\n");
+        return commentFormatter.replaceComments(textWithoutComments);
     }
 
 }

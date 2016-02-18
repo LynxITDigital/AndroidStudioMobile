@@ -37,7 +37,6 @@ public class HTMLFormatter extends TextFormatter {
 
         // get back ALTERED stream
         String text = extractor.getRewriter().getText();
-
-        return text.replaceAll("\n", "<br />\n");
+        return text;
     }
 }

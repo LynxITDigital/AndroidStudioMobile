@@ -5,6 +5,6 @@ package com.example.blah.mobilestudio.FileViewer;
  */
 public class TextFormatter {
     public String highlightSourceCode(String text) {
-        return text.replaceAll("\n", "<br />\n");
+        return text;
     }
 }
