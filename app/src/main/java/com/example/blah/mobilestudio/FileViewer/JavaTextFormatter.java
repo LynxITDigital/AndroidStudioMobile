@@ -1,7 +1,7 @@
 package com.example.blah.mobilestudio.FileViewer;
 
-import com.example.blah.mobilestudio.parser.JavaLexer;
-import com.example.blah.mobilestudio.parser.JavaParser;
+import com.example.blah.mobilestudio.parser.java.JavaLexer;
+import com.example.blah.mobilestudio.parser.java.JavaParser;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -11,16 +11,14 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 /**
  * Created by Stephen on 18/02/2016.
  */
-public class JavaTextFormatter {
-
-
+public class JavaTextFormatter extends TextFormatter {
     private JavaColorScheme javaColorScheme;
 
     /**
      * Creating an empty JavaTextFormatter will format the text with the default colourscheme,
      * set as LightColour.
      */
-    public JavaTextFormatter(){
+    public JavaTextFormatter() {
         setJavaColorScheme(new LightColour());
     }
 
@@ -32,6 +30,7 @@ public class JavaTextFormatter {
         this.javaColorScheme = javaColorScheme;
     }
 
+    @Override
     public String highlightSourceCode(String input) {
         ANTLRInputStream antlrInputStream = new ANTLRInputStream(input);
         JavaLexer javaLexer = new JavaLexer(antlrInputStream);
@@ -48,7 +47,7 @@ public class JavaTextFormatter {
 
         CommentFormatter commentFormatter = new CommentFormatter();
         String textWithoutComments = commentFormatter.removeComments(text);
-        return commentFormatter.replaceComments(textWithoutComments).replaceAll("\n", "<br />\n");
+        return commentFormatter.replaceComments(textWithoutComments);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.example.blah.mobilestudio.FileViewer;
 
 
-import com.example.blah.mobilestudio.parser.JavaBaseListener;
-import com.example.blah.mobilestudio.parser.JavaParser;
+import com.example.blah.mobilestudio.parser.java.JavaBaseListener;
+import com.example.blah.mobilestudio.parser.java.JavaParser;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
@@ -10,10 +10,9 @@ import org.antlr.v4.runtime.TokenStreamRewriter;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Created by yehe on 17/02/2016.
+ * Created by Ye He on 17/02/2016.
  */
 public class JavaHighlightListener extends JavaBaseListener {
-
     private TokenStreamRewriter rewriter;
     private JavaColorScheme javaColorScheme;
 

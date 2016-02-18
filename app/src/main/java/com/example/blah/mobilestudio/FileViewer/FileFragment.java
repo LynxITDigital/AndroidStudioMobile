@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 
 /**
@@ -29,16 +31,14 @@ import java.util.Calendar;
  * No other logic is performed in this class.
  */
 public class FileFragment extends Fragment {
-
-    // The file to be displayed
     private File displayedFile;
     private static String DEFAULT_TEXT = "No files are open" +
             System.getProperty("line.separator")
             + "Select a file to open from the explorer";
     private static String ERROR_TEXT = "Unable to display file: ";
     public static String FILE_CONTENTS = "File contents";
-    private static String HTML_OPENING = "<html><body><p>";
-    private static String HTML_CLOSING = "</p></html></body>";
+    private static String HTML_OPENING = "<html><body><pre>";
+    private static String HTML_CLOSING = "</pre></body></html>";
     private static String[] IMAGE_FORMATS = {"jpeg", "png", "bmp", "webp", "jpg"};
 
     WebView webView;
@@ -78,42 +78,51 @@ public class FileFragment extends Fragment {
             return;
         }
 
-        // Check if the file is an image by checking if the extension is jpeg or png
         String[] fileNameComponents = displayedFile.getAbsolutePath().split("\\.");
-        // Extension will be the final component after the "."
+
         if (fileNameComponents.length > 0) {
             String extension = fileNameComponents[fileNameComponents.length - 1];
-            for (int i = 0; i < IMAGE_FORMATS.length; i++) {
-                if (extension.equals(IMAGE_FORMATS[i])) {
+            for (String IMAGE_FORMAT : IMAGE_FORMATS) {
+                if (extension.equals(IMAGE_FORMAT)) {
                     loadImageFile();
                     return;
                 }
             }
+
+            switch (extension) {
+                case "java":
+                    new FileOpenerTask(new JavaTextFormatter()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    return;
+                case "html":
+                    new FileOpenerTask(new HTMLFormatter()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    return;
+            }
         }
 
-        new FileOpenerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new FileOpenerTask(new TextFormatter()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class FileOpenerTask extends AsyncTask<Void, String, String> {
         long startTime;
         long endTime;
+        private TextFormatter formatter;
+
+        public FileOpenerTask(TextFormatter formatter) {
+            this.formatter = formatter;
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             startTime = Calendar.getInstance().getTimeInMillis();
         }
 
         @Override
         protected String doInBackground(Void... params) {
-
-
-            // Open the file and read each lines
             try {
                 BufferedReader br = new BufferedReader(new FileReader(displayedFile));
                 StringBuilder stringBuilder = new StringBuilder();
-                String line = null;
+                String line;
 
                 while ((line = br.readLine()) != null) {
                     line = line + System.getProperty("line.separator");
@@ -122,7 +131,6 @@ public class FileFragment extends Fragment {
                 }
                 br.close();
                 String result = stringBuilder.toString();
-                JavaTextFormatter formatter = new JavaTextFormatter();
                 result = formatter.highlightSourceCode(result);
 
                 return result;
@@ -147,10 +155,7 @@ public class FileFragment extends Fragment {
 
     }
 
-    // Loads an image file into the view
-    // Assumes displayed file is an image
     private void loadImageFile() {
-        // clear the webview if there is one
         webView.setVisibility(View.GONE);
         imageView.setVisibility(View.VISIBLE);
         // set the image file bitmap
@@ -192,13 +197,18 @@ public class FileFragment extends Fragment {
 
     }
 
-    // Loads a webview from an input string
     private void loadWebView(String input) {
-        // clear the image view if there is one
         imageView.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
-        // Set the webview to display the input string
-        webView.loadData(HTML_OPENING + input + HTML_CLOSING, "text/html; charset=utf-8", null);
+        String html = HTML_OPENING + input + HTML_CLOSING;
+        try {
+            // For the use of replaceAll, check this:
+            // http://stackoverflow.com/questions/5027084/android-webview-incorrectly-handling-newlines-in-preformatted-text
+            // Might be fragile, nee more testing.
+            webView.loadData(URLEncoder.encode(html, "utf-8").replaceAll("\\+", "%20"), "text/html; charset=utf-8", null);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public File getDisplayedFile() {
