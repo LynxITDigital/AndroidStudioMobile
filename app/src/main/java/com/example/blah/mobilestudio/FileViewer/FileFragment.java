@@ -16,13 +16,6 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.example.blah.mobilestudio.R;
-import com.example.blah.mobilestudio.parser.JavaLexer;
-import com.example.blah.mobilestudio.parser.JavaParser;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -129,33 +122,16 @@ public class FileFragment extends Fragment {
                 }
                 br.close();
                 String result = stringBuilder.toString();
-                result = highlightSourceCode(result);
+                JavaTextFormatter formatter = new JavaTextFormatter();
+                result = formatter.highlightSourceCode(result);
 
-                return result.replaceAll("\n", "<br />\n");
+                return result;
             } catch (IOException e) {
                 Log.d("error", e.getMessage());
             }
             return null;
         }
 
-        private String highlightSourceCode(String input) {
-            ANTLRInputStream antlrInputStream = new ANTLRInputStream(input);
-            JavaLexer javaLexer = new JavaLexer(antlrInputStream);
-            CommonTokenStream tokens = new CommonTokenStream(javaLexer);
-            JavaParser javaParser = new JavaParser(tokens);
-            ParseTree tree = javaParser.compilationUnit();
-            ParseTreeWalker walker = new ParseTreeWalker();
-            HighlightListener extractor = new HighlightListener(tokens);
-            // initiate walk of tree with listener
-            walker.walk(extractor, tree);
-
-            // get back ALTERED stream
-            String text = extractor.rewriter.getText();
-
-            CommentFormatter commentFormatter = new CommentFormatter();
-            String textWithoutComments = commentFormatter.removeComments(text);
-            return commentFormatter.replaceComments(textWithoutComments);
-        }
 
         @Override
         protected void onPostExecute(String result) {

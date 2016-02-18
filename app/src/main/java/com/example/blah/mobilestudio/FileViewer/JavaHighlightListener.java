@@ -12,31 +12,22 @@ import org.apache.commons.lang3.StringEscapeUtils;
 /**
  * Created by yehe on 17/02/2016.
  */
-public class HighlightListener extends JavaBaseListener {
-    private static final String STRING_FONT_SUFFIX = "</font>";
-    private static final String STRING_FONT_PREFIX = "<font color='2e8b57'>";
-    private static final String ANNOTATION_FONT_PREFIX = "<font color='#BBB529'><b>";
-    private static final String ANNOTATION_FONT_SUFFIX = "</b></font>";
-    private static final String KEYWORD_FONT_PREFIX = "<font color='#0000ff'><b>";
-    private static final String KEYWORD_FONT_SUFFIX = "</b></font>";
-    private static final String MODIFIER_FONT_PREFIX = "<font color='#CC7832'>";
-    private static final String MODIFIER_FONT_SUFFIX = "</font>";
-    private static final String METHOD_NAME_FONT_PREFIX = "<font color='#FFC66D'>";
-    private static final String METHOD_NAME_FONT_SUFFIX = "</font>";
-    private static final String VAR_DECL_ID_FONT_PREFIX = "<font color='#824892'>";;
-    private static final String VAR_DECL_ID_FONT_SUFFIX = "</font>";;
-    TokenStreamRewriter rewriter;
+public class JavaHighlightListener extends JavaBaseListener {
 
-    public HighlightListener(TokenStream tokens) {
+    private TokenStreamRewriter rewriter;
+    private JavaColorScheme javaColorScheme;
+
+    public JavaHighlightListener(TokenStream tokens, JavaColorScheme color) {
         rewriter = new TokenStreamRewriter(tokens);
+        javaColorScheme = color;
     }
 
     @Override
     public void enterStatement(JavaParser.StatementContext ctx) {
         int tokenType = ctx.getStart().getType();
         if (isKeyword(tokenType)) {
-            rewriter.insertBefore(ctx.start, KEYWORD_FONT_PREFIX);
-            rewriter.insertAfter(ctx.start, KEYWORD_FONT_SUFFIX);
+            rewriter.insertBefore(ctx.start, javaColorScheme.getKeywordPrefix());
+            rewriter.insertAfter(ctx.start, javaColorScheme.getKeywordSuffix());
         }
     }
 
@@ -48,15 +39,15 @@ public class HighlightListener extends JavaBaseListener {
             String escapedText = StringEscapeUtils.escapeHtml4(text);
 
             rewriter.replace(ctx.start, escapedText);
-            rewriter.insertBefore(ctx.start, STRING_FONT_PREFIX);
-            rewriter.insertAfter(ctx.start, STRING_FONT_SUFFIX);
+            rewriter.insertBefore(ctx.start, javaColorScheme.getStringPrefix());
+            rewriter.insertAfter(ctx.start, javaColorScheme.getStringSuffix());
         }
     }
 
     @Override
     public void enterAnnotation(JavaParser.AnnotationContext ctx) {
-        rewriter.insertBefore(ctx.start, ANNOTATION_FONT_PREFIX);
-        rewriter.insertAfter(ctx.stop, ANNOTATION_FONT_SUFFIX);
+        rewriter.insertBefore(ctx.start, javaColorScheme.getAnnotationPrefix());
+        rewriter.insertAfter(ctx.stop, javaColorScheme.getAnnotationSuffix());
     }
 
     private boolean isKeyword(int tokenType) {
@@ -72,21 +63,25 @@ public class HighlightListener extends JavaBaseListener {
     public void enterClassOrInterfaceModifier(JavaParser.ClassOrInterfaceModifierContext ctx) {
         int tokenType = ctx.getStart().getType();
         if (tokenType != JavaParser.RULE_annotation) {
-            rewriter.insertBefore(ctx.start, MODIFIER_FONT_PREFIX);
-            rewriter.insertAfter(ctx.start, MODIFIER_FONT_SUFFIX);
+            rewriter.insertBefore(ctx.start, javaColorScheme.getModifierPrefix());
+            rewriter.insertAfter(ctx.start, javaColorScheme.getModifierSuffix());
         }
     }
 
     @Override
     public void enterMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
         Token token = ctx.getToken(JavaParser.Identifier, 0).getSymbol();
-        rewriter.insertBefore(token, METHOD_NAME_FONT_PREFIX);
-        rewriter.insertAfter(token, METHOD_NAME_FONT_SUFFIX);
+        rewriter.insertBefore(token, javaColorScheme.getMethodNamePrefix());
+        rewriter.insertAfter(token, javaColorScheme.getMethodNameSuffix());
     }
 
     @Override
     public void enterVariableDeclaratorId(JavaParser.VariableDeclaratorIdContext ctx) {
-        rewriter.insertBefore(ctx.start, VAR_DECL_ID_FONT_PREFIX);
-        rewriter.insertAfter(ctx.stop, VAR_DECL_ID_FONT_SUFFIX);
+        rewriter.insertBefore(ctx.start, javaColorScheme.getVardecidPrefix());
+        rewriter.insertAfter(ctx.stop, javaColorScheme.getVardecidSuffix());
+    }
+
+    public TokenStreamRewriter getRewriter() {
+        return rewriter;
     }
 }
