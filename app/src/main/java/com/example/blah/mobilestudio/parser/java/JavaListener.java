@@ -1,5 +1,5 @@
 // Generated from /Users/yehe/projects/Android/MobileStudio/app/src/main/java/com/example/blah/mobilestudio/parser/Java.g4 by ANTLR 4.5.1
-package com.example.blah.mobilestudio.parser;
+package com.example.blah.mobilestudio.parser.java;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
