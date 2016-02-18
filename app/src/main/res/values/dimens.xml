@@ -6,4 +6,5 @@
     <dimen name="android_monitor_title_height">40dp</dimen>
     <dimen name="resizer_border_width">2dp</dimen>
     <dimen name="resizer_move_size">16dp</dimen>
+    <dimen name="file_fragment_fullscreen_button">24dp</dimen>
 </resources>

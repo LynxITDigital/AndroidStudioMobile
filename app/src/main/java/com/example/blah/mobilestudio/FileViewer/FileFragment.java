@@ -2,6 +2,7 @@ package com.example.blah.mobilestudio.FileViewer;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -13,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.blah.mobilestudio.R;
+import com.example.blah.mobilestudio.activities.DisplayFileActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,16 +44,25 @@ public class FileFragment extends Fragment {
     private static String HTML_CLOSING = "</p></html></body>";
     private static String[] IMAGE_FORMATS = {"jpeg", "png", "bmp", "webp", "jpg"};
 
-    WebView webView;
-    ImageView imageView;
+    private Button fullScreenButton;
+    private WebView webView;
+    private ImageView imageView;
+    private boolean isFullscreen;
 
     public FileFragment() {
-
+        isFullscreen = false;
     }
 
     @SuppressLint("ValidFragment")
     public FileFragment(File file) {
         displayedFile = file;
+        isFullscreen = false;
+    }
+
+    @SuppressLint("ValidFragment")
+    public FileFragment(File file, boolean isFullscreen){
+        displayedFile = file;
+        this.isFullscreen = isFullscreen;
     }
 
     @Override
@@ -58,7 +70,23 @@ public class FileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         webView = (WebView) rootView.findViewById(R.id.web_layout);
         imageView = (ImageView) rootView.findViewById(R.id.image_layout);
-
+        fullScreenButton = (Button) rootView.findViewById(R.id.fullscreen_button);
+        fullScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFullscreen){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    isFullscreen = false;
+                } else{
+                    FileFragment fileFragment = new FileFragment(getDisplayedFile(), true);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.screen_layout, fileFragment)
+                            .addToBackStack(FILE_CONTENTS)
+                            .commit();
+                    isFullscreen = true;
+                }
+            }
+        });
         displayFileText();
 
         return rootView;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        android:clickable="true">
+
+        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/web_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/image_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+        <Button
+            android:layout_width="@dimen/file_fragment_fullscreen_button"
+            android:layout_height="@dimen/file_fragment_fullscreen_button"
+            android:id="@+id/fullscreen_button"
+            android:background="@drawable/fullscreen"
+            android:layout_gravity="right"/>
+    </FrameLayout>
+
+</FrameLayout>
+
