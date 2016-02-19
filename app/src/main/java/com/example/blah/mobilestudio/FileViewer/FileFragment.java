@@ -9,8 +9,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -44,9 +47,9 @@ public class FileFragment extends Fragment {
     private static String HTML_CLOSING = "</p></html></body>";
     private static String[] IMAGE_FORMATS = {"jpeg", "png", "bmp", "webp", "jpg"};
 
-    private Button fullScreenButton;
     private WebView webView;
     private ImageView imageView;
+    private GestureDetectorCompat gestureDetector;
     private boolean isFullscreen;
 
     public FileFragment() {
@@ -70,23 +73,16 @@ public class FileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.content_layout, container, false);
         webView = (WebView) rootView.findViewById(R.id.web_layout);
         imageView = (ImageView) rootView.findViewById(R.id.image_layout);
-        fullScreenButton = (Button) rootView.findViewById(R.id.fullscreen_button);
-        fullScreenButton.setOnClickListener(new View.OnClickListener() {
+        gestureDetector = new GestureDetectorCompat(getContext(), new DoubleTapListener());
+        View.OnTouchListener listener = new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                if(isFullscreen){
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    isFullscreen = false;
-                } else{
-                    FileFragment fileFragment = new FileFragment(getDisplayedFile(), true);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .add(R.id.screen_layout, fileFragment)
-                            .addToBackStack(FILE_CONTENTS)
-                            .commit();
-                    isFullscreen = true;
-                }
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
-        });
+        };
+        // The webview and image view should listen for double taps
+        webView.setOnTouchListener(listener);
+        imageView.setOnTouchListener(listener);
         displayFileText();
 
         return rootView;
@@ -95,6 +91,31 @@ public class FileFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent event){
+            if(getResources().getBoolean(R.bool.isTablet)){
+                if(isFullscreen){
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.screen_layout, (new FileFragment(getDisplayedFile(), true)))
+                            .addToBackStack(FILE_CONTENTS)
+                            .commit();
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e){
+            Log.d("d", "on down");
+            return true;
+        }
     }
 
     /**
